@@ -4,7 +4,6 @@ A Go sample project to summarize some of my thoughts and practices when developi
 
 This project was inspired by the data model below. (Find more [here](http://www.databaseanswers.org/data_models/chess_tournaments/index.htm))
 
-*add image here*
 ![Data Model](http://www.databaseanswers.org/data_models/chess_tournaments/images/data_model.gif)
 
 
