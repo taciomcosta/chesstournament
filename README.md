@@ -21,12 +21,15 @@ You can also benefit from other useful `make` commands already configured, like:
 ## Structure
 ```
 ├── cmd // contains apps entrypoints (delivery mechanisms)
+│   | 
 │   └── webapi // REST app 
+|       |
 │       ├── handlers
 │       │   ├── chessclub.go
 │       │   └── chessclub_test.go
 │       └── main.go
-├── internal // contains reusable packages
+├── internal // contains non-reusable packages
+|   |
 │   └── chessclub 
 │       ├── chessclub.go
 │       ├── chessclub_mock.go
