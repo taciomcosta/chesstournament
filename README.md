@@ -15,6 +15,8 @@ We are going to need a Postgres instance. You can set up the API and Postgres wi
 #### make
 Alternatively, you can set up your own Postgres instance and change the database configuration in `.env`, in the root folder.
 
+Then use `make` to run the project
+
 You can also benefit from other useful `make` commands already configured, like:
 `make test`, `make coverage`, `make build`, `make build:windows`
 
