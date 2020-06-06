@@ -42,4 +42,4 @@ You can also benefit from other useful `make` commands already configured, like:
 - [ ] Postgres integration
 - [ ] 
 
-Test-driven developed :hearts:
+*Test-driven developed* :hearts:
