@@ -7,9 +7,16 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/chessclub"
 )
 
+var service chessclub.Service
+
+func init() {
+	service = chessclub.New()
+}
+
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	json := mustJSON(chessclub.GetClubById(0))
+	club, _ := service.GetClubById(1)
+	json := mustJSON(*club)
 	w.Write(json)
 }
 

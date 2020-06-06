@@ -6,10 +6,15 @@ import (
 	"testing"
 
 	"github.com/taciomcosta/chesstournament/internal/chessclub"
+	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
+func TestMain(m *testing.M) {
+	service = chessclub.Mock()
+}
+
 func TestGetChessclubDetailsHandlerStatusOK(t *testing.T) {
-	w, _ := http.NewRequest("GET", "/chessclub/{id}", nil)
+	w, _ := http.NewRequest("GET", "/v1/chessclub/{id}", nil)
 	r := httptest.NewRecorder()
 
 	GetChessclubDetailsHandler(r, w)
@@ -22,7 +27,7 @@ func TestGetChessclubDetailsHandlerStatusOK(t *testing.T) {
 		t.Error(`it should set header "Content-Type: application/json"`)
 	}
 
-	expected := string(mustJSON(chessclub.GetClubById(0)))
+	expected := string(mustJSON(model.MockChessClub))
 	if r.Body.String() != expected {
 		t.Errorf("it should return json body %v, got %v", expected, r.Body.String())
 	}
