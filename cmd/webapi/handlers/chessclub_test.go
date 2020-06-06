@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/taciomcosta/chesstournament/pkg/chessclub"
+	"github.com/taciomcosta/chesstournament/internal/chessclub"
 )
 
 func TestGetChessclubDetailsHandlerStatusOK(t *testing.T) {

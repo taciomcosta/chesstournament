@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/taciomcosta/chesstournament/pkg/chessclub"
+	"github.com/taciomcosta/chesstournament/internal/chessclub"
 )
 
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
