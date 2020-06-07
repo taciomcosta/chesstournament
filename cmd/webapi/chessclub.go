@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/taciomcosta/chesstournament/internal/chessclub"
 )
 
@@ -15,7 +17,17 @@ func init() {
 
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	club, _ := service.GetClubById(1)
+
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	club, err := service.GetClubById(id)
+
+	if err != nil {
+		http.Error(w, "resource not found", http.StatusNotFound)
+		return
+	}
+
 	json := mustJSON(*club)
 	w.Write(json)
 }

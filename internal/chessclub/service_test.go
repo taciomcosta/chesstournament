@@ -1,6 +1,7 @@
 package chessclub
 
 import (
+	"os"
 	"testing"
 
 	"github.com/taciomcosta/chesstournament/internal/model"
@@ -11,6 +12,7 @@ var s service
 
 func TestMain(m *testing.M) {
 	chessclubRepository = &repository.MockChessClub{}
+	os.Exit(m.Run())
 }
 
 func TestNew(t *testing.T) {
