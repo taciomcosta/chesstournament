@@ -4,14 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	webapi "github.com/taciomcosta/chesstournament/cmd/webapi/handlers"
 )
 
 var address string = ":8080"
 
 func main() {
 	r := mux.NewRouter()
-	r.HandleFunc("/v1/chessclubs/{id}", webapi.GetChessclubDetailsHandler).Methods("GET")
+	r.HandleFunc("/v1/chessclubs/{id}", GetChessclubDetailsHandler).Methods("GET")
 	http.Handle("/", r)
 	http.ListenAndServe(address, nil)
 }

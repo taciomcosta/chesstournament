@@ -1,4 +1,4 @@
-package webapi
+package main
 
 import (
 	"net/http"
@@ -14,7 +14,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetChessclubDetailsHandlerStatusOK(t *testing.T) {
-	w, _ := http.NewRequest("GET", "/v1/chessclub/{id}", nil)
+	t.Error("must error")
+	w, _ := http.NewRequest("GET", "/v1/chessclubs/1", nil)
 	r := httptest.NewRecorder()
 
 	GetChessclubDetailsHandler(r, w)
@@ -32,3 +33,15 @@ func TestGetChessclubDetailsHandlerStatusOK(t *testing.T) {
 		t.Errorf("it should return json body %v, got %v", expected, r.Body.String())
 	}
 }
+
+//func TestGetChessclubDetailsHandlerStatusNotFound(t *testing.T) {
+//	w, _ := http.NewRequest("GET", "/v1/chessclubs/1", nil)
+//	r := httptest.NewRecorder()
+//
+//	GetChessclubDetailsHandler(r, w)
+//
+//	if r.Code != http.StatusNotFound {
+//		t.Error("it should return status code OK")
+//	}
+//
+//}

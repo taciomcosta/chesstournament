@@ -8,7 +8,7 @@ import (
 var chessclubRepository repository.ChessClub
 
 func init() {
-	chessclubRepository = &repository.MockChessClub{}
+	chessclubRepository = repository.ChessClubRepository{}
 }
 
 type Service interface {
