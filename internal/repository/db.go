@@ -8,12 +8,13 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
+func init() {
+	db = newDB()
+}
+
 var db *pg.DB
 
 func newDB() *pg.DB {
-	if db != nil {
-		return db
-	}
 	db := connect()
 	if err := createSchema(db); err != nil {
 		panic(err)

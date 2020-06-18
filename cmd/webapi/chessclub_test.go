@@ -33,9 +33,9 @@ func TestGetChessclubDetailsHandlerStatusOK(t *testing.T) {
 		t.Error(`it should set header "Content-Type: application/json"`)
 	}
 
-	expected := string(mustJSON(model.MockChessClub))
-	if r.Body.String() != expected {
-		t.Errorf("it should return json body %v, got %v", expected, r.Body.String())
+	want := string(mustJSON(model.MockChessClub))
+	if r.Body.String() != want {
+		t.Errorf("it should return json body %v, got %v", want, r.Body.String())
 	}
 }
 
@@ -48,5 +48,4 @@ func TestGetChessclubDetailsHandlerStatusNotFound(t *testing.T) {
 	if r.Code != http.StatusNotFound {
 		t.Errorf("it should return status code Not Found, got %v", r.Code)
 	}
-
 }

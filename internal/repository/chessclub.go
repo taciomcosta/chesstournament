@@ -12,7 +12,6 @@ type ChessClub interface {
 type ChessClubRepository struct{}
 
 func (r ChessClubRepository) GetById(id int) (*model.ChessClub, error) {
-	db := newDB()
 	club := &model.ChessClub{Id: id}
 	err := db.Select(club)
 	if err != nil {
