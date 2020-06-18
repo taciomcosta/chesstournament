@@ -30,8 +30,8 @@ func testGetExistingChessclubById(t *testing.T) {
 }
 
 func testGetUnexistentChessclubById(t *testing.T) {
-	club, err := s.GetClubById(-1)
-	if err == nil || club != nil {
-		t.Error("it should not retrieve unexistent chess club")
+	_, err := s.GetClubById(-1)
+	if _, ok := err.(UnexistingClubErr); !ok {
+		t.Error("it should return an UnexistingClubErr")
 	}
 }

@@ -22,5 +22,15 @@ func New() Service {
 type service struct{}
 
 func (s service) GetClubById(id int) (*model.ChessClub, error) {
-	return chessclubRepository.GetById(id)
+	club, err := chessclubRepository.GetById(id)
+	if err != nil {
+		return nil, UnexistingClubErr{}
+	}
+	return club, nil
+}
+
+type UnexistingClubErr struct{}
+
+func (err UnexistingClubErr) Error() string {
+	return "Chess Club was not found"
 }
