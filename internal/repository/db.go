@@ -5,6 +5,7 @@ import (
 
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
+	"github.com/taciomcosta/chesstournament/internal/config"
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
@@ -24,10 +25,10 @@ func newDB() *pg.DB {
 
 func connect() *pg.DB {
 	return pg.Connect(&pg.Options{
-		Addr:     ":5432",
-		User:     "keycloak",
-		Password: "password",
-		Database: "chesstournament",
+		Addr:     config.String("DB_ADDR"),
+		User:     config.String("DB_USER"),
+		Password: config.String("DB_PASSWORD"),
+		Database: config.String("DB_DATABASE"),
 		OnConnect: func(*pg.Conn) error {
 			fmt.Println("Connected to Postgres successfully!")
 			return nil
