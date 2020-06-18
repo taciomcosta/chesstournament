@@ -1,7 +1,6 @@
 package chessclub
 
 import (
-	"os"
 	"testing"
 
 	"github.com/taciomcosta/chesstournament/internal/model"
@@ -9,11 +8,6 @@ import (
 )
 
 var s service
-
-func TestMain(m *testing.M) {
-	chessclubRepository = &repository.MockChessClub{}
-	os.Exit(m.Run())
-}
 
 func TestNew(t *testing.T) {
 	var newService Service = New()
@@ -23,13 +17,19 @@ func TestNew(t *testing.T) {
 }
 
 func TestGetClubById(t *testing.T) {
+	chessclubRepository = &repository.MockChessClub{}
+	t.Run("should return existing chess club", testGetExistingChessclubById)
+	t.Run("should not retrieve unexistent chess club", testGetUnexistentChessclubById)
+}
+
+func testGetExistingChessclubById(t *testing.T) {
 	club, _ := s.GetClubById(1)
 	if *club != model.MockChessClub {
 		t.Error("it should get chess club by id")
 	}
 }
 
-func TestGetClubByIdUnexistent(t *testing.T) {
+func testGetUnexistentChessclubById(t *testing.T) {
 	club, err := s.GetClubById(-1)
 	if err == nil || club != nil {
 		t.Error("it should not retrieve unexistent chess club")

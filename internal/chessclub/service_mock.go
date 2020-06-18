@@ -2,6 +2,7 @@ package chessclub
 
 import (
 	"github.com/taciomcosta/chesstournament/internal/model"
+	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
 func Mock() Service {
@@ -11,5 +12,6 @@ func Mock() Service {
 type mockService struct{}
 
 func (m mockService) GetClubById(id int) (*model.ChessClub, error) {
-	return chessclubRepository.GetById(id)
+	repository := repository.MockChessClub{}
+	return repository.GetById(id)
 }
