@@ -8,11 +8,11 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/taciomcosta/chesstournament/internal/chessclub"
-	"github.com/taciomcosta/chesstournament/internal/model"
+	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
 func TestMain(m *testing.M) {
-	service = chessclub.Mock()
+	s = chessclub.NewService(&repository.MockChessClub{})
 	os.Exit(m.Run())
 }
 
@@ -31,11 +31,6 @@ func TestGetChessclubDetailsHandlerStatusOK(t *testing.T) {
 
 	if r.Header().Get("Content-Type") != "application/json" {
 		t.Error(`it should set header "Content-Type: application/json"`)
-	}
-
-	want := string(mustJSON(model.MockChessClub))
-	if r.Body.String() != want {
-		t.Errorf("it should return json body %v, got %v", want, r.Body.String())
 	}
 }
 

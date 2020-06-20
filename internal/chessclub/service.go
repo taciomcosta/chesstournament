@@ -1,36 +1,26 @@
 package chessclub
 
 import (
+	"errors"
+
 	"github.com/taciomcosta/chesstournament/internal/model"
 	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
-var chessclubRepository repository.ChessClub
+var UnexistingClubError = errors.New("Chess Club was not found")
 
-func init() {
-	chessclubRepository = repository.ChessClubRepository{}
+func NewService(r repository.ChessClub) *Service {
+	return &Service{r}
 }
 
-type Service interface {
-	GetClubById(id int) (*model.ChessClub, error)
+type Service struct {
+	r repository.ChessClub
 }
 
-func New() Service {
-	return service{}
-}
-
-type service struct{}
-
-func (s service) GetClubById(id int) (*model.ChessClub, error) {
-	club, err := chessclubRepository.GetById(id)
+func (s Service) GetClubById(id int) (*model.ChessClub, error) {
+	club, err := s.r.GetById(id)
 	if err != nil {
-		return nil, UnexistingClubErr{}
+		return nil, UnexistingClubError
 	}
 	return club, nil
-}
-
-type UnexistingClubErr struct{}
-
-func (err UnexistingClubErr) Error() string {
-	return "Chess Club was not found"
 }

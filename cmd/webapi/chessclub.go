@@ -8,21 +8,22 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/taciomcosta/chesstournament/internal/chessclub"
+	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
-var service chessclub.Service
+var s *chessclub.Service
 
 func init() {
-	service = chessclub.New()
+	s = chessclub.NewService(repository.ChessClubRepository{})
 }
 
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	id := getId(r)
-	club, err := service.GetClubById(id)
+	club, err := s.GetClubById(id)
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write(mustErrorJSON(err))
+		w.Write(errorResponse(err))
 	} else {
 		json := mustJSON(*club)
 		w.Write(json)
@@ -35,8 +36,8 @@ func getId(r *http.Request) int {
 	return id
 }
 
-func mustErrorJSON(err error) []byte {
-	errString := fmt.Sprintf(`{"code": "%T", "msg": "%s"}`, err, err)
+func errorResponse(err error) []byte {
+	errString := fmt.Sprintf(`{"msg": "%s"}`, err)
 	return []byte(errString)
 }
 
