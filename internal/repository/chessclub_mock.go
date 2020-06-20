@@ -9,8 +9,21 @@ import (
 type MockChessClub struct{}
 
 func (repository *MockChessClub) GetById(id int) (*model.ChessClub, error) {
-	if id == model.MockChessClub.Id {
-		return &model.MockChessClub, nil
+	club := mockClubs()
+	for _, c := range club {
+		if c.Id == id {
+			return &c, nil
+		}
 	}
 	return nil, errors.New("Non-existing resource")
+}
+
+func mockClubs() []model.ChessClub {
+	return []model.ChessClub{
+		{
+			Id:      1,
+			Name:    "QueenClub",
+			Address: "Neverland",
+		},
+	}
 }
