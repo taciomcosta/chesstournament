@@ -3,6 +3,7 @@ package chessclub
 import (
 	"testing"
 
+	"github.com/taciomcosta/chesstournament/internal/model"
 	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
@@ -15,22 +16,47 @@ func TestNewService(t *testing.T) {
 	}
 }
 
-func TestGetClubById(t *testing.T) {
-	s = Service{&repository.MockChessClub{}}
-	t.Run("should return existing chess club", testGetExistingChessclubById)
-	t.Run("should not retrieve unexistent chess club", testGetUnexistentChessclubById)
-}
+func TestGetClubId(t *testing.T) {
+	var tests = []struct {
+		id          int
+		expectsClub bool
+		expectsErr  bool
+	}{
+		{1, true, false},
+		{-1, false, true},
+	}
+	s := NewService(&repository.MockChessClub{})
 
-func testGetExistingChessclubById(t *testing.T) {
-	club, _ := s.GetClubById(1)
-	if club == nil {
-		t.Error("it should get chess club by id")
+	for _, tt := range tests {
+		c, err := s.GetClubById(tt.id)
+		if tt.expectsClub && c == nil {
+			t.Error("it should return a Chess Club")
+		}
+		if tt.expectsErr && err == nil {
+			t.Error("it should return an error")
+		}
 	}
 }
 
-func testGetUnexistentChessclubById(t *testing.T) {
-	_, err := s.GetClubById(-1)
-	if err != UnexistingClubError {
-		t.Error("it should return an UnexistingClubError")
+func TestCreateChessclub(t *testing.T) {
+	var tests = []struct {
+		c           *model.ChessClub
+		expectsClub bool
+		expectsErr  bool
+	}{
+		{&model.ChessClub{Id: 0, Name: "name", Address: "address"}, true, false},
+		{&model.ChessClub{}, false, true},
+	}
+
+	s := NewService(&repository.MockChessClub{})
+
+	for _, tt := range tests {
+		c, err := s.CreateChessclub(tt.c)
+		if tt.expectsClub && c == nil {
+			t.Error("it should return created chessclub")
+		}
+		if tt.expectsErr && err == nil {
+			t.Error("it should return an error")
+		}
 	}
 }

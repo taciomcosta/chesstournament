@@ -3,11 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/taciomcosta/chesstournament/internal/chessclub"
+	"github.com/taciomcosta/chesstournament/internal/model"
 	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
@@ -44,4 +46,24 @@ func errorResponse(err error) []byte {
 func mustJSON(v interface{}) []byte {
 	json, _ := json.Marshal(v)
 	return json
+}
+
+func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
+	b, _ := ioutil.ReadAll(r.Body)
+	r.Body.Close()
+
+	w.Header().Set("Content-Type", "application/json")
+	var c model.ChessClub
+	if err := json.Unmarshal(b, &c); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if c, err := s.CreateChessclub(&c); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorResponse(err))
+	} else {
+		json := mustJSON(c)
+		w.Write(json)
+	}
 }

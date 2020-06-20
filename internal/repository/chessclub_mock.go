@@ -18,6 +18,10 @@ func (repository *MockChessClub) GetById(id int) (*model.ChessClub, error) {
 	return nil, errors.New("Non-existing resource")
 }
 
+func (repository *MockChessClub) Create(c *model.ChessClub) (*model.ChessClub, error) {
+	return c, nil
+}
+
 func mockClubs() []model.ChessClub {
 	return []model.ChessClub{
 		{

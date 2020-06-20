@@ -24,3 +24,10 @@ func (s Service) GetClubById(id int) (*model.ChessClub, error) {
 	}
 	return club, nil
 }
+
+func (s Service) CreateChessclub(c *model.ChessClub) (*model.ChessClub, error) {
+	if err := c.Validate(); err != nil {
+		return nil, err
+	}
+	return s.r.Create(c)
+}

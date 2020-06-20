@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/gorilla/mux"
@@ -16,31 +17,55 @@ func TestMain(m *testing.M) {
 	os.Exit(m.Run())
 }
 
-func TestGetChessclubDetailsHandlerStatusOK(t *testing.T) {
-	w, _ := http.NewRequest("GET", "/v1/chessclubs/1", nil)
-	w = mux.SetURLVars(w, map[string]string{
-		"id": "1",
-	})
-	r := httptest.NewRecorder()
-
-	GetChessclubDetailsHandler(r, w)
-
-	if r.Code != http.StatusOK {
-		t.Error("it should return status code OK")
+func TestGetChessclubDetails(t *testing.T) {
+	var tests = []struct {
+		vars   map[string]string
+		status int
+	}{
+		{map[string]string{"id": "1"}, http.StatusOK},
+		{map[string]string{"id": "unexistent"}, http.StatusNotFound},
 	}
 
-	if r.Header().Get("Content-Type") != "application/json" {
-		t.Error(`it should set header "Content-Type: application/json"`)
+	for _, tt := range tests {
+		w, _ := http.NewRequest("GET", "/v1/chessclubs/10000", nil)
+		w = mux.SetURLVars(w, tt.vars)
+		r := httptest.NewRecorder()
+
+		GetChessclubDetailsHandler(r, w)
+
+		if r.Code != tt.status {
+			t.Errorf("want status %v, got %v", r.Code, tt.status)
+		}
+
+		if r.Header().Get("Content-Type") != "application/json" {
+			t.Error(`it should set header "Content-Type: application/json"`)
+		}
 	}
 }
 
-func TestGetChessclubDetailsHandlerStatusNotFound(t *testing.T) {
-	w, _ := http.NewRequest("GET", "/v1/chessclubs/10000", nil)
-	r := httptest.NewRecorder()
+func TestCreateChessclub(t *testing.T) {
+	var tests = []struct {
+		body   string
+		status int
+	}{
+		{`{"name": "name", "address": "address"}`, http.StatusOK},
+		{`{invalid: json}`, http.StatusBadRequest},
+		{`{"name": "", "address": ""}`, http.StatusBadRequest},
+	}
 
-	GetChessclubDetailsHandler(r, w)
+	for _, tt := range tests {
+		body := strings.NewReader(tt.body)
+		w, _ := http.NewRequest("POST", "/v1/chessclubs", body)
+		r := httptest.NewRecorder()
 
-	if r.Code != http.StatusNotFound {
-		t.Errorf("it should return status code Not Found, got %v", r.Code)
+		CreateChessclubHandler(r, w)
+
+		if r.Code != tt.status {
+			t.Errorf("it should return status code BadRequest, got %v", r.Code)
+		}
+
+		if r.Header().Get("Content-Type") != "application/json" {
+			t.Error(`it should set header "Content-Type: application/json"`)
+		}
 	}
 }
