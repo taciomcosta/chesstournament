@@ -11,6 +11,7 @@ var InternalDBErr = errors.New("Internal database error")
 type ChessClub interface {
 	GetById(int) (*model.ChessClub, error)
 	Create(*model.ChessClub) (*model.ChessClub, error)
+	ListClubs(ListFilter) ([]model.ChessClub, error)
 }
 
 type ChessClubRepository struct{}
@@ -28,4 +29,14 @@ func (r ChessClubRepository) Create(c *model.ChessClub) (*model.ChessClub, error
 		return nil, InternalDBErr
 	}
 	return c, nil
+}
+
+type ListFilter struct {
+	OrderBy string `schema:"$orderBy"`
+}
+
+func (r ChessClubRepository) ListClubs(lr ListFilter) ([]model.ChessClub, error) {
+	var cs []model.ChessClub
+	err := db.Model(&cs).OrderExpr(lr.OrderBy).Select()
+	return cs, err
 }

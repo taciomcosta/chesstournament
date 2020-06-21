@@ -18,7 +18,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetChessclubDetails(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		vars   map[string]string
 		status int
 	}{
@@ -40,7 +40,7 @@ func TestGetChessclubDetails(t *testing.T) {
 }
 
 func TestCreateChessclub(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		body   string
 		status int
 	}{
@@ -58,6 +58,28 @@ func TestCreateChessclub(t *testing.T) {
 
 		if r.Code != tt.status {
 			t.Errorf("it should return status code BadRequest, got %v", r.Code)
+		}
+	}
+}
+
+func TestListChessclubs(t *testing.T) {
+	tests := []struct {
+		queryParams string
+		status      int
+	}{
+		{"", http.StatusOK},
+		{"$orderBy=invalid", http.StatusBadRequest},
+	}
+
+	for _, tt := range tests {
+		url := "/v1/chessclubs?" + tt.queryParams
+		w, _ := http.NewRequest("GET", url, nil)
+		r := httptest.NewRecorder()
+
+		ListChessclubsHandler(r, w)
+
+		if r.Code != tt.status {
+			t.Errorf("want status %v, got %v", tt.status, r.Code)
 		}
 	}
 }

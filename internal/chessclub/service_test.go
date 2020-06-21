@@ -60,3 +60,28 @@ func TestCreateChessclub(t *testing.T) {
 		}
 	}
 }
+
+func TestListClubs(t *testing.T) {
+	tests := []struct {
+		r            repository.ListFilter
+		expectsClubs bool
+		expectsErr   bool
+	}{
+		{repository.ListFilter{}, true, false},
+		{repository.ListFilter{"invalid"}, false, true},
+	}
+
+	s := NewService(&repository.MockChessClub{})
+
+	for _, tt := range tests {
+		cs, err := s.ListClubs(tt.r)
+
+		if tt.expectsClubs && len(cs) == 0 {
+			t.Error("it should list Chess Clubs")
+		}
+
+		if tt.expectsErr && err == nil {
+			t.Error("it should return an error")
+		}
+	}
+}

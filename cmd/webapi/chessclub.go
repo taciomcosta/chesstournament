@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 	"github.com/taciomcosta/chesstournament/internal/chessclub"
 	"github.com/taciomcosta/chesstournament/internal/model"
 	"github.com/taciomcosta/chesstournament/internal/repository"
@@ -72,4 +73,26 @@ func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	json := mustJSON(c)
 	w.WriteHeader(http.StatusCreated)
 	w.Write(json)
+}
+
+func ListChessclubsHandler(w http.ResponseWriter, r *http.Request) {
+	f := getFilter(r)
+
+	cs, err := s.ListClubs(f)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorResponse(err))
+		return
+	}
+
+	json := mustJSON(cs)
+	w.Write(json)
+}
+
+func getFilter(r *http.Request) repository.ListFilter {
+	var f repository.ListFilter
+	r.ParseForm()
+	schema.NewDecoder().Decode(&f, r.Form)
+	return f
 }

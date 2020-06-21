@@ -8,7 +8,7 @@ import (
 
 type MockChessClub struct{}
 
-func (repository *MockChessClub) GetById(id int) (*model.ChessClub, error) {
+func (r *MockChessClub) GetById(id int) (*model.ChessClub, error) {
 	club := mockClubs()
 	for _, c := range club {
 		if c.Id == id {
@@ -18,7 +18,15 @@ func (repository *MockChessClub) GetById(id int) (*model.ChessClub, error) {
 	return nil, errors.New("Non-existing resource")
 }
 
-func (repository *MockChessClub) Create(c *model.ChessClub) (*model.ChessClub, error) {
+func (r *MockChessClub) ListClubs(f ListFilter) ([]model.ChessClub, error) {
+	if f.OrderBy == "invalid" {
+		return []model.ChessClub{}, errors.New("invalid query")
+
+	}
+	return mockClubs(), nil
+}
+
+func (r *MockChessClub) Create(c *model.ChessClub) (*model.ChessClub, error) {
 	return c, nil
 }
 

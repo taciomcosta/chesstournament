@@ -19,6 +19,7 @@ func main() {
 
 func addHandlers(r *mux.Router) {
 	r.HandleFunc("/v1/chessclubs/{id}", GetChessclubDetailsHandler).Methods("GET")
+	r.HandleFunc("/v1/chessclubs", ListChessclubsHandler).Methods("GET")
 	r.HandleFunc("/v1/chessclubs", CreateChessclubHandler).Methods("POST")
 }
 
