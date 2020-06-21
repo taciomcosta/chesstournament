@@ -18,7 +18,7 @@ func (r *MockChessClub) GetById(id int) (*model.ChessClub, error) {
 	return nil, errors.New("Non-existing resource")
 }
 
-func (r *MockChessClub) ListClubs(f ListFilter) ([]model.ChessClub, error) {
+func (r *MockChessClub) ListClubs(f Filter) ([]model.ChessClub, error) {
 	if f.OrderBy == "invalid" {
 		return []model.ChessClub{}, errors.New("invalid query")
 

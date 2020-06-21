@@ -90,8 +90,8 @@ func ListChessclubsHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(json)
 }
 
-func getFilter(r *http.Request) repository.ListFilter {
-	var f repository.ListFilter
+func getFilter(r *http.Request) repository.Filter {
+	var f repository.Filter
 	r.ParseForm()
 	schema.NewDecoder().Decode(&f, r.Form)
 	return f

@@ -32,7 +32,7 @@ func (s Service) CreateChessclub(c *model.ChessClub) (*model.ChessClub, error) {
 	return s.r.Create(c)
 }
 
-func (s Service) ListClubs(r repository.ListFilter) ([]model.ChessClub, error) {
+func (s Service) ListClubs(r repository.Filter) ([]model.ChessClub, error) {
 	cs, err := s.r.ListClubs(r)
 	if err != nil {
 		return []model.ChessClub{}, err

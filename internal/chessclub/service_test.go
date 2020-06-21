@@ -63,12 +63,12 @@ func TestCreateChessclub(t *testing.T) {
 
 func TestListClubs(t *testing.T) {
 	tests := []struct {
-		r            repository.ListFilter
+		r            repository.Filter
 		expectsClubs bool
 		expectsErr   bool
 	}{
-		{repository.ListFilter{}, true, false},
-		{repository.ListFilter{"invalid"}, false, true},
+		{repository.Filter{}, true, false},
+		{repository.Filter{OrderBy: "invalid"}, false, true},
 	}
 
 	s := NewService(&repository.MockChessClub{})
