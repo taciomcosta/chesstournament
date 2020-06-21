@@ -44,7 +44,7 @@ func TestCreateChessclub(t *testing.T) {
 		body   string
 		status int
 	}{
-		{`{"name": "name", "address": "address"}`, http.StatusOK},
+		{`{"name": "name", "address": "address"}`, http.StatusCreated},
 		{`{invalid: json}`, http.StatusBadRequest},
 		{`{"name": "", "address": ""}`, http.StatusBadRequest},
 	}

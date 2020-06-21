@@ -21,14 +21,17 @@ func init() {
 
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	id := getId(r)
+
 	club, err := s.GetClubById(id)
+
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(errorResponse(err))
-	} else {
-		json := mustJSON(*club)
-		w.Write(json)
+		return
 	}
+
+	json := mustJSON(*club)
+	w.Write(json)
 }
 
 func getId(r *http.Request) int {
@@ -54,14 +57,19 @@ func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	var c model.ChessClub
 	if err := json.Unmarshal(b, &c); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write(errorResponse(err))
 		return
 	}
 
-	if c, err := s.CreateChessclub(&c); err != nil {
+	_, err := s.CreateChessclub(&c)
+
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(errorResponse(err))
-	} else {
-		json := mustJSON(c)
-		w.Write(json)
+		return
 	}
+
+	json := mustJSON(c)
+	w.WriteHeader(http.StatusCreated)
+	w.Write(json)
 }
