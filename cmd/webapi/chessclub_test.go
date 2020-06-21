@@ -36,10 +36,6 @@ func TestGetChessclubDetails(t *testing.T) {
 		if r.Code != tt.status {
 			t.Errorf("want status %v, got %v", r.Code, tt.status)
 		}
-
-		if r.Header().Get("Content-Type") != "application/json" {
-			t.Error(`it should set header "Content-Type: application/json"`)
-		}
 	}
 }
 
@@ -62,10 +58,6 @@ func TestCreateChessclub(t *testing.T) {
 
 		if r.Code != tt.status {
 			t.Errorf("it should return status code BadRequest, got %v", r.Code)
-		}
-
-		if r.Header().Get("Content-Type") != "application/json" {
-			t.Error(`it should set header "Content-Type: application/json"`)
 		}
 	}
 }

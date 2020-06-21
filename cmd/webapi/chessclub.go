@@ -22,7 +22,6 @@ func init() {
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	id := getId(r)
 	club, err := s.GetClubById(id)
-	w.Header().Set("Content-Type", "application/json")
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(errorResponse(err))
@@ -52,7 +51,6 @@ func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	b, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
 
-	w.Header().Set("Content-Type", "application/json")
 	var c model.ChessClub
 	if err := json.Unmarshal(b, &c); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
