@@ -8,13 +8,21 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/config"
 )
 
+var swaggerURLPath = "/swagger"
+
 func main() {
 	r := mux.NewRouter()
 	http.Handle("/", r)
+	addSwagger(r)
 	addHandlers(r)
 	addMiddlewares(r)
 	fmt.Printf("Server listening on %s\n", config.String("HOST"))
 	http.ListenAndServe(config.String("HOST"), nil)
+}
+
+func addSwagger(r *mux.Router) {
+	fs := http.FileServer(http.Dir("./swagger/"))
+	r.PathPrefix(swaggerURLPath).Handler(http.StripPrefix(swaggerURLPath, fs))
 }
 
 func addHandlers(r *mux.Router) {

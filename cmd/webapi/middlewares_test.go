@@ -11,13 +11,24 @@ type mockHandler struct{}
 func (m mockHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {}
 
 func TestHeadersMiddleware(t *testing.T) {
-	r, _ := http.NewRequest("GET", "/v1/chessclubs/10000", nil)
-	rr := httptest.NewRecorder()
-	h := headersMiddleware(mockHandler{})
+	tests := []struct {
+		urlPath     string
+		contentType string
+	}{
+		{"/v1/chessclubs/10000", "application/json"},
+		{"/swagger", ""},
+		{"/swagger/", ""},
+	}
 
-	h.ServeHTTP(rr, r)
+	for _, tt := range tests {
+		r, _ := http.NewRequest("GET", tt.urlPath, nil)
+		rr := httptest.NewRecorder()
+		h := headersMiddleware(mockHandler{})
 
-	if rr.Header().Get("Content-Type") != "application/json" {
-		t.Error(`it should set header "Content-Type: application/json"`)
+		h.ServeHTTP(rr, r)
+
+		if got := rr.Header().Get("Content-Type"); got != tt.contentType {
+			t.Errorf("want %s, got %s", tt.contentType, got)
+		}
 	}
 }
