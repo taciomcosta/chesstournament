@@ -32,13 +32,10 @@ func (r ChessClubRepository) Create(c *model.ChessClub) (*model.ChessClub, error
 }
 
 func (r ChessClubRepository) ListClubs(lr Filter) ([]model.ChessClub, error) {
-	var cs []model.ChessClub
+	cs := make([]model.ChessClub, 0)
 	if err := lr.validate(); err != nil {
-		return []model.ChessClub{}, err
+		return cs, err
 	}
 	err := db.Model(&cs).OrderExpr(lr.OrderBy).Offset(lr.Offset).Limit(lr.Limit).Select()
-	if cs == nil {
-		return []model.ChessClub{}, err
-	}
 	return cs, err
 }
