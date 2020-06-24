@@ -1,0 +1,139 @@
+openapi: 3.0.1
+info:
+  title: Chess Tournament
+  description: 'Rest API also available as CLI and GraphQL API.'
+  contact:
+    email: taciomcosta@gmail.com
+  version: 1.0.0
+externalDocs:
+  description: GitHub
+  url: https://github.com/taciomcosta/chesstournament/tree/master/internal
+servers:
+- url: http://localhost:8080/v1
+tags:
+- name: chessclub
+  description: Everything about Chess Clubs
+paths:
+  /chessclubs:
+    post:
+      tags:
+      - chessclub
+      summary: Add a new chess club
+      operationId: addChessclub
+      requestBody:
+        description: Chess Club that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Chessclub'
+        required: true
+      responses:
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    get:
+      tags:
+      - chessclub
+      summary: Finds Chess Clubs
+      description: Operators like $top, $skip for pagination and $orderBy can be provided.
+      operationId: listChessclubs
+      parameters:
+      - name: $top
+        in: query
+        description: Limits number of items to be returned (it can be used with $top for client-side pagination).
+        required: false
+        style: form
+        schema:
+          type: integer
+      - name: $skip
+        in: query
+        description: Skips N items from returned array (it can be used with $top for client-side pagination).
+        required: false
+        style: form
+        schema:
+          type: integer
+      - name: $orderBy
+        in: query
+        description: sort items in array based on one or many fields
+        required: false
+        style: form
+        schema:
+          type: string
+          example: field1 asc, field2 desc, ...
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Chessclub'
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /chessclubs/{chessclubId}:
+    get:
+      tags:
+      - chessclub
+      summary: Find Chess Club by ID
+      description: Returns a single chess club
+      operationId: getChessclubDetails
+      parameters:
+      - name: chessclubId
+        in: path
+        description: ID of chess club to return
+        required: true
+        schema:
+          type: integer
+          format: int
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chessclub'
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Chess Club Not Found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    Chessclub:
+      required:
+      - name
+      - address
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int
+        name:
+          type: string
+          example: QueenClub
+        address:
+          type: string
+          example: Somewhere
+      xml:
+        name: Pet
+    ErrorResponse:
+      type: object
+      properties:
+        msg:
+          type: string
+          example: Some error message
