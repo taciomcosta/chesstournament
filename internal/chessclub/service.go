@@ -32,6 +32,15 @@ func (s Service) CreateChessclub(c *model.ChessClub) (*model.ChessClub, error) {
 	return s.r.Create(c)
 }
 
+func (s Service) EditChessclub(id int, c *model.ChessClub) error {
+	if _, err := s.GetClubById(id); err != nil {
+		return err
+	}
+	c.Id = id
+	_, err := s.CreateChessclub(c)
+	return err
+}
+
 func (s Service) ListClubs(r repository.Filter) ([]model.ChessClub, error) {
 	cs, err := s.r.ListClubs(r)
 	if err != nil {

@@ -26,7 +26,10 @@ func (r ChessClubRepository) GetById(id int) (*model.ChessClub, error) {
 }
 
 func (r ChessClubRepository) Create(c *model.ChessClub) (*model.ChessClub, error) {
-	if err := db.Insert(c); err != nil {
+	_, err := db.Model(c).
+		OnConflict("(id) DO UPDATE").
+		Insert()
+	if err != nil {
 		return nil, InternalDBErr
 	}
 	return c, nil

@@ -120,3 +120,41 @@ func TestDeleteClub(t *testing.T) {
 		}
 	}
 }
+
+func TestEditChessclub(t *testing.T) {
+	tests := []struct {
+		id          int
+		c           *model.ChessClub
+		expectsErr  bool
+		description string
+	}{
+		{
+			id:          1,
+			c:           &model.ChessClub{Name: "name", Address: "address"},
+			expectsErr:  false,
+			description: "should edit chess club without errors",
+		},
+		{
+			id:          -1,
+			c:           &model.ChessClub{Name: "name", Address: "address"},
+			expectsErr:  true,
+			description: "should not edit non-existing chessclub",
+		},
+		{
+			id:          1,
+			c:           &model.ChessClub{},
+			expectsErr:  true,
+			description: "should not edit club with invalid/empty paramters",
+		},
+	}
+
+	s := NewService(&repository.MockChessClub{})
+
+	for _, tt := range tests {
+		err := s.EditChessclub(tt.id, tt.c)
+
+		if tt.expectsErr && err == nil {
+			t.Error(tt.description)
+		}
+	}
+}

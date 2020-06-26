@@ -62,6 +62,32 @@ func TestCreateChessclub(t *testing.T) {
 	}
 }
 
+func TestEditChessclub(t *testing.T) {
+	tests := []struct {
+		body   string
+		id     string
+		status int
+	}{
+		{`{"name": "name", "address": "address"}`, "1", http.StatusOK},
+		{`{invalid: json}`, "1", http.StatusBadRequest},
+		{`{"name": "", "address": ""}`, "1", http.StatusBadRequest},
+	}
+
+	for _, tt := range tests {
+		body := strings.NewReader(tt.body)
+		w, _ := http.NewRequest("PUT", "/v1/chessclubs/1", body)
+		w = mux.SetURLVars(w, map[string]string{"id": "1"})
+		r := httptest.NewRecorder()
+
+		EditChessclubHandler(r, w)
+
+		if r.Code != tt.status {
+			t.Errorf("want status %d, got %d", tt.status, r.Code)
+		}
+	}
+
+}
+
 func TestListChessclubs(t *testing.T) {
 	tests := []struct {
 		queryParams string
