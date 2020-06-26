@@ -25,9 +25,7 @@ func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
 
 	club, err := s.GetClubById(id)
 
-	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write(errorResponse(err))
+	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
 		return
 	}
 
@@ -39,6 +37,15 @@ func getId(r *http.Request) int {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["id"])
 	return id
+}
+
+func tryRespondWithError(w http.ResponseWriter, httpStatus int, err error) bool {
+	if err == nil {
+		return false
+	}
+	w.WriteHeader(httpStatus)
+	w.Write(errorResponse(err))
+	return true
 }
 
 func errorResponse(err error) []byte {
@@ -56,17 +63,14 @@ func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	r.Body.Close()
 
 	var c model.ChessClub
-	if err := json.Unmarshal(b, &c); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(errorResponse(err))
+	err := json.Unmarshal(b, &c)
+	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
 
-	_, err := s.CreateChessclub(&c)
+	_, err = s.CreateChessclub(&c)
 
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(errorResponse(err))
+	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
 
@@ -80,9 +84,7 @@ func ListChessclubsHandler(w http.ResponseWriter, r *http.Request) {
 
 	cs, err := s.ListClubs(f)
 
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(errorResponse(err))
+	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
 
@@ -95,4 +97,17 @@ func getFilter(r *http.Request) repository.Filter {
 	r.ParseForm()
 	schema.NewDecoder().Decode(&f, r.Form)
 	return f
+}
+
+func DeleteChessclubHandler(w http.ResponseWriter, r *http.Request) {
+	id := getId(r)
+
+	c, err := s.DeleteClub(id)
+
+	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
+		return
+	}
+
+	json := mustJSON(*c)
+	w.Write(json)
 }

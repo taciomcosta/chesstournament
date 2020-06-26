@@ -34,7 +34,7 @@ func TestGetChessclubDetails(t *testing.T) {
 		GetChessclubDetailsHandler(r, w)
 
 		if r.Code != tt.status {
-			t.Errorf("want status %v, got %v", r.Code, tt.status)
+			t.Errorf("want status %v, got %v", tt.status, r.Code)
 		}
 	}
 }
@@ -80,6 +80,28 @@ func TestListChessclubs(t *testing.T) {
 
 		if r.Code != tt.status {
 			t.Errorf("want status %v, got %v", tt.status, r.Code)
+		}
+	}
+}
+
+func TestDeleteChessclub(t *testing.T) {
+	tests := []struct {
+		vars   map[string]string
+		status int
+	}{
+		{map[string]string{"id": "1"}, http.StatusOK},
+		{map[string]string{"id": "-1"}, http.StatusNotFound},
+	}
+
+	for _, tt := range tests {
+		w, _ := http.NewRequest("DELETE", "/v1/chessclubs/10000", nil)
+		w = mux.SetURLVars(w, tt.vars)
+		r := httptest.NewRecorder()
+
+		DeleteChessclubHandler(r, w)
+
+		if r.Code != tt.status {
+			t.Errorf("want status %v, got %v", r.Code, tt.status)
 		}
 	}
 }

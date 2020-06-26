@@ -39,3 +39,9 @@ func (s Service) ListClubs(r repository.Filter) ([]model.ChessClub, error) {
 	}
 	return cs, nil
 }
+
+func (s Service) DeleteClub(id int) (*model.ChessClub, error) {
+	c, err := s.GetClubById(id)
+	s.r.Remove(c)
+	return c, err
+}

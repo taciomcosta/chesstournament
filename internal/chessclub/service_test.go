@@ -85,3 +85,38 @@ func TestListClubs(t *testing.T) {
 		}
 	}
 }
+
+func TestDeleteClub(t *testing.T) {
+	tests := []struct {
+		clubId      int
+		clubExists  bool
+		expectsErr  bool
+		description string
+	}{
+		{
+			clubId:      1,
+			clubExists:  true,
+			expectsErr:  false,
+			description: "should return delete chess club",
+		},
+		{
+			clubId:      -1,
+			clubExists:  false,
+			expectsErr:  true,
+			description: "should return error for non-existing chessclub",
+		},
+	}
+
+	s := NewService(&repository.MockChessClub{})
+
+	for _, tt := range tests {
+		c, err := s.DeleteClub(tt.clubId)
+		if tt.clubExists && c == nil {
+			t.Error(tt.description)
+		}
+
+		if tt.expectsErr && err == nil {
+			t.Error(tt.description)
+		}
+	}
+}

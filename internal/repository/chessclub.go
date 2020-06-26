@@ -12,6 +12,7 @@ type ChessClub interface {
 	GetById(int) (*model.ChessClub, error)
 	Create(*model.ChessClub) (*model.ChessClub, error)
 	ListClubs(Filter) ([]model.ChessClub, error)
+	Remove(*model.ChessClub) error
 }
 
 type ChessClubRepository struct{}
@@ -38,4 +39,8 @@ func (r ChessClubRepository) ListClubs(lr Filter) ([]model.ChessClub, error) {
 	}
 	err := db.Model(&cs).OrderExpr(lr.OrderBy).Offset(lr.Offset).Limit(lr.Limit).Select()
 	return cs, err
+}
+
+func (r ChessClubRepository) Remove(c *model.ChessClub) error {
+	return db.Delete(c)
 }

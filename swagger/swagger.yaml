@@ -100,18 +100,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Chessclub'
-        400:
-          description: Bad Request
-          content: 
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         404:
           description: Chess Club Not Found
           content: 
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+      - chessclub
+      summary: Delete Chess Club by ID
+      description: Deletes a single chess club
+      operationId: deleteChessclub
+      parameters:
+      - name: chessclubId
+        in: path
+        description: ID of chess club to delete
+        required: true
+        schema:
+          type: integer
+          format: int
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Chessclub'
+        404:
+          description: Chess Club Not Found
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'                
 components:
   schemas:
     Chessclub:
@@ -137,3 +158,4 @@ components:
         msg:
           type: string
           example: Some error message
+

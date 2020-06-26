@@ -39,3 +39,7 @@ func mockClubs() []model.ChessClub {
 		},
 	}
 }
+
+func (r *MockChessClub) Remove(c *model.ChessClub) error {
+	return nil
+}
