@@ -10,7 +10,7 @@ var InternalDBErr = errors.New("Internal database error")
 
 type ChessClub interface {
 	GetById(int) (*model.ChessClub, error)
-	Create(*model.ChessClub) (*model.ChessClub, error)
+	Add(*model.ChessClub) (*model.ChessClub, error)
 	ListClubs(Filter) ([]model.ChessClub, error)
 	Remove(*model.ChessClub) error
 }
@@ -25,7 +25,7 @@ func (r ChessClubRepository) GetById(id int) (*model.ChessClub, error) {
 	return club, nil
 }
 
-func (r ChessClubRepository) Create(c *model.ChessClub) (*model.ChessClub, error) {
+func (r ChessClubRepository) Add(c *model.ChessClub) (*model.ChessClub, error) {
 	_, err := db.Model(c).
 		OnConflict("(id) DO UPDATE").
 		Insert()

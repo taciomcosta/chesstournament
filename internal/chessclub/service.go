@@ -29,7 +29,7 @@ func (s Service) CreateChessclub(c *model.ChessClub) (*model.ChessClub, error) {
 	if err := c.Validate(); err != nil {
 		return nil, err
 	}
-	return s.r.Create(c)
+	return s.r.Add(c)
 }
 
 func (s Service) EditChessclub(id int, c *model.ChessClub) error {

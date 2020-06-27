@@ -26,7 +26,7 @@ func (r *MockChessClub) ListClubs(f Filter) ([]model.ChessClub, error) {
 	return mockClubs(), nil
 }
 
-func (r *MockChessClub) Create(c *model.ChessClub) (*model.ChessClub, error) {
+func (r *MockChessClub) Add(c *model.ChessClub) (*model.ChessClub, error) {
 	return c, nil
 }
 
