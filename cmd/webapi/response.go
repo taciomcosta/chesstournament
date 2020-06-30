@@ -16,16 +16,20 @@ func mustJSON(v interface{}) []byte {
 	return json
 }
 
-func errorResponse(err error) []byte {
-	errString := fmt.Sprintf(`{"msg": "%s"}`, err)
-	return []byte(errString)
-}
-
 func tryRespondWithError(w http.ResponseWriter, httpStatus int, err error) bool {
 	if err == nil {
 		return false
 	}
+	respondWithError(w, httpStatus, err)
+	return true
+}
+
+func respondWithError(w http.ResponseWriter, httpStatus int, err error) {
 	w.WriteHeader(httpStatus)
 	w.Write(errorResponse(err))
-	return true
+}
+
+func errorResponse(err error) []byte {
+	errString := fmt.Sprintf(`{"msg": "%s"}`, err)
+	return []byte(errString)
 }
