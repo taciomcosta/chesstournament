@@ -13,6 +13,8 @@ servers:
 tags:
 - name: chessclub
   description: Everything about Chess Clubs
+- name: player
+  description: Everything about Players
 paths:
   /chessclubs:
     post:
@@ -160,6 +162,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'                
+  /players:
+    post:
+      tags:
+      - player
+      summary: Add a new player
+      operationId: addPlayer
+      requestBody:
+        description: Player that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Player'
+        required: true
+      responses:
+        400:
+          description: Bad Request
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
     Chessclub:
@@ -176,6 +198,38 @@ components:
         address:
           type: string
           example: Somewhere
+    Player:
+      required:
+      - clubId
+      - rankingCode
+      - firstName
+      - lastName
+      - address
+      - phone
+      - email
+      type: object
+      properties:
+        id:
+          type: integer
+        clubId:
+          type: integer
+        rankingCode:
+          type: integer
+        firstName:
+          type: string
+          example: Tacio
+        lastName:
+          type: string
+          example: Costa
+        address:
+          type: string
+          example: Somewhere
+        phone:
+          type: string
+          example: "12341234"
+        email:
+          type: string
+          example: tacio@email.com
     ErrorResponse:
       type: object
       properties:
