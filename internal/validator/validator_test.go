@@ -8,9 +8,21 @@ import (
 )
 
 func TestValidate(t *testing.T) {
-	want := errors.New("Invalid fields: Name,Address")
-	got := Validate(model.ChessClub{})
-	if want.Error() != got.Error() {
-		t.Errorf("want %s, got %s", want, got)
+	tests := []struct {
+		want error
+		c    model.ChessClub
+	}{
+		{errors.New("Invalid fields: Name,Address"), model.ChessClub{}},
+		{nil, model.ChessClub{Name: "name", Address: "address"}},
+	}
+
+	for _, tt := range tests {
+		got := Validate(tt.c)
+		if tt.want == nil && got != nil {
+			t.Errorf("want %s, got %s", tt.want, got)
+		}
+		if tt.want != nil && got == nil {
+			t.Errorf("want %s, got %s", tt.want, got)
+		}
 	}
 }

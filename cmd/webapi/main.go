@@ -12,11 +12,11 @@ var swaggerURLPath = "/swagger"
 
 func main() {
 	r := mux.NewRouter()
-	http.Handle("/", r)
 	addSwagger(r)
 	addHandlers(r)
 	addMiddlewares(r)
 	fmt.Printf("Server listening on %s\n", config.String("HOST"))
+	http.Handle("/", r)
 	http.ListenAndServe(config.String("HOST"), nil)
 }
 
