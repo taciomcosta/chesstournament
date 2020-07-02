@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/taciomcosta/chesstournament/internal/repository"
+	"github.com/taciomcosta/chesstournament/internal/apperrors"
 )
 
 func respond(w http.ResponseWriter, data interface{}) {
@@ -27,7 +27,7 @@ func tryRespondWithError(w http.ResponseWriter, httpStatus int, err error) bool 
 }
 
 func respondWithError(w http.ResponseWriter, httpStatus int, err error) {
-	if _, ok := err.(repository.InternalErr); ok {
+	if _, ok := err.(apperrors.InternalErr); ok {
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {
 		w.WriteHeader(httpStatus)

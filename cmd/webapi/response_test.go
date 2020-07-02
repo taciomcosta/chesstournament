@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/taciomcosta/chesstournament/internal/repository"
+	"github.com/taciomcosta/chesstournament/internal/apperrors"
 )
 
 func TestRespond(t *testing.T) {
@@ -48,7 +48,7 @@ func testRespondWithError(t *testing.T) {
 			body:       `{"msg": "An internal error has occurred"}`,
 			status:     http.StatusBadRequest,
 			wantStatus: http.StatusInternalServerError,
-			err:        repository.InternalErr{},
+			err:        apperrors.InternalErr{},
 			ok:         true,
 		},
 	}

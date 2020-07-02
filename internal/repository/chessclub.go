@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/taciomcosta/chesstournament/internal/apperrors"
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
@@ -26,7 +27,7 @@ func (r ChessClubRepository) Add(c *model.ChessClub) (*model.ChessClub, error) {
 		OnConflict("(id) DO UPDATE").
 		Insert()
 	if err != nil {
-		return nil, InternalErr{}
+		return nil, apperrors.InternalErr{}
 	}
 	return c, nil
 }
@@ -42,10 +43,4 @@ func (r ChessClubRepository) ListClubs(lr Filter) ([]model.ChessClub, error) {
 
 func (r ChessClubRepository) Remove(c *model.ChessClub) error {
 	return db.Delete(c)
-}
-
-type InternalErr struct{}
-
-func (e InternalErr) Error() string {
-	return "An internal error has occurred"
 }
