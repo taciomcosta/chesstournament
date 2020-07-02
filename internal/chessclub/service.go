@@ -45,7 +45,7 @@ func (s Service) EditChessclub(id int, c *model.ChessClub) error {
 func (s Service) ListClubs(r repository.Filter) ([]model.ChessClub, error) {
 	cs, err := s.r.ListClubs(r)
 	if err != nil {
-		return []model.ChessClub{}, err
+		return nil, err
 	}
 	return cs, nil
 }

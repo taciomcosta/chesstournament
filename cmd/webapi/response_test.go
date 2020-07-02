@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
 func TestRespond(t *testing.T) {
@@ -28,24 +30,44 @@ func TestTryRespondWithError(t *testing.T) {
 }
 
 func testRespondWithError(t *testing.T) {
-	rr := httptest.NewRecorder()
-	err := errors.New("some_error")
-
-	wantBody := `{"msg": "some_error"}`
-	wantStatus := http.StatusBadRequest
-	gotOk := tryRespondWithError(rr, wantStatus, err)
-
-	if rr.Body.String() != wantBody {
-		t.Errorf("Body: want %s, got %s", wantBody, rr.Body.String())
+	tests := []struct {
+		body       string
+		status     int
+		wantStatus int
+		err        error
+		ok         bool
+	}{
+		{
+			body:       `{"msg": "some_error"}`,
+			status:     http.StatusBadRequest,
+			wantStatus: http.StatusBadRequest,
+			err:        errors.New("some_error"),
+			ok:         true,
+		},
+		{
+			body:       `{"msg": "An internal error has occurred"}`,
+			status:     http.StatusBadRequest,
+			wantStatus: http.StatusInternalServerError,
+			err:        repository.InternalErr{},
+			ok:         true,
+		},
 	}
 
-	if rr.Result().StatusCode != wantStatus {
-		t.Errorf("Status: want %d, got %d", wantStatus, rr.Result().StatusCode)
-	}
+	for _, tt := range tests {
+		rr := httptest.NewRecorder()
+		ok := tryRespondWithError(rr, tt.status, tt.err)
 
-	wantOk := true
-	if wantOk != gotOk {
-		t.Errorf("OK: want %v, got %v", wantOk, gotOk)
+		if rr.Body.String() != tt.body {
+			t.Errorf("Body: want %s, got %s", tt.body, rr.Body.String())
+		}
+
+		if rr.Result().StatusCode != tt.wantStatus {
+			t.Errorf("Status: want %d, got %d", tt.wantStatus, rr.Result().StatusCode)
+		}
+
+		if tt.ok != ok {
+			t.Errorf("OK: want %v, got %v", tt.ok, ok)
+		}
 	}
 
 }

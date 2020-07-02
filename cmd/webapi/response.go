@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
 func respond(w http.ResponseWriter, data interface{}) {
@@ -25,7 +27,11 @@ func tryRespondWithError(w http.ResponseWriter, httpStatus int, err error) bool 
 }
 
 func respondWithError(w http.ResponseWriter, httpStatus int, err error) {
-	w.WriteHeader(httpStatus)
+	if _, ok := err.(repository.InternalErr); ok {
+		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		w.WriteHeader(httpStatus)
+	}
 	w.Write(errorResponse(err))
 }
 
