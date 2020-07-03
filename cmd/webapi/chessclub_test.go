@@ -27,7 +27,7 @@ func TestGetChessclubDetails(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		w, _ := http.NewRequest("GET", "/v1/chessclubs/10000", nil)
+		w, _ := http.NewRequest("GET", "/chessclubs/10000", nil)
 		w = mux.SetURLVars(w, tt.vars)
 		r := httptest.NewRecorder()
 
@@ -51,7 +51,7 @@ func TestCreateChessclub(t *testing.T) {
 
 	for _, tt := range tests {
 		body := strings.NewReader(tt.body)
-		w, _ := http.NewRequest("POST", "/v1/chessclubs", body)
+		w, _ := http.NewRequest("POST", "/chessclubs", body)
 		r := httptest.NewRecorder()
 
 		CreateChessclubHandler(r, w)
@@ -75,7 +75,7 @@ func TestEditChessclub(t *testing.T) {
 
 	for _, tt := range tests {
 		body := strings.NewReader(tt.body)
-		w, _ := http.NewRequest("PUT", "/v1/chessclubs/1", body)
+		w, _ := http.NewRequest("PUT", "/chessclubs/1", body)
 		w = mux.SetURLVars(w, map[string]string{"id": "1"})
 		r := httptest.NewRecorder()
 
@@ -98,7 +98,7 @@ func TestListChessclubs(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		url := "/v1/chessclubs?" + tt.queryParams
+		url := "/chessclubs?" + tt.queryParams
 		w, _ := http.NewRequest("GET", url, nil)
 		r := httptest.NewRecorder()
 
@@ -120,7 +120,7 @@ func TestDeleteChessclub(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		w, _ := http.NewRequest("DELETE", "/v1/chessclubs/10000", nil)
+		w, _ := http.NewRequest("DELETE", "/chessclubs/10000", nil)
 		w = mux.SetURLVars(w, tt.vars)
 		r := httptest.NewRecorder()
 

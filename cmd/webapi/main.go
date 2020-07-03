@@ -11,7 +11,7 @@ import (
 var swaggerURLPath = "/swagger"
 
 func main() {
-	r := mux.NewRouter()
+	r := mux.NewRouter().PathPrefix("/v1").Subrouter()
 	addSwagger(r)
 	addHandlers(r)
 	addMiddlewares(r)
@@ -26,11 +26,11 @@ func addSwagger(r *mux.Router) {
 }
 
 func addHandlers(r *mux.Router) {
-	r.HandleFunc("/v1/chessclubs/{id}", GetChessclubDetailsHandler).Methods("GET")
-	r.HandleFunc("/v1/chessclubs", ListChessclubsHandler).Methods("GET")
-	r.HandleFunc("/v1/chessclubs", CreateChessclubHandler).Methods("POST")
-	r.HandleFunc("/v1/chessclubs/{id}", DeleteChessclubHandler).Methods("DELETE")
-	r.HandleFunc("/v1/chessclubs/{id}", EditChessclubHandler).Methods("PUT")
+	r.HandleFunc("/chessclubs/{id}", GetChessclubDetailsHandler).Methods("GET")
+	r.HandleFunc("/chessclubs", ListChessclubsHandler).Methods("GET")
+	r.HandleFunc("/chessclubs", CreateChessclubHandler).Methods("POST")
+	r.HandleFunc("/chessclubs/{id}", DeleteChessclubHandler).Methods("DELETE")
+	r.HandleFunc("/chessclubs/{id}", EditChessclubHandler).Methods("PUT")
 }
 
 func addMiddlewares(r *mux.Router) {
