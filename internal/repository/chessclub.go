@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"github.com/taciomcosta/chesstournament/internal/apperrors"
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
@@ -25,7 +24,7 @@ func (r ChessClubRepository) GetById(id int) (*model.ChessClub, error) {
 func (r ChessClubRepository) Add(c *model.ChessClub) (*model.ChessClub, error) {
 	_, err := db.Model(c).OnConflict("(id) DO UPDATE").Insert()
 	if err != nil {
-		return nil, apperrors.InternalErr{}
+		return nil, model.InternalErr{}
 	}
 	return c, nil
 }

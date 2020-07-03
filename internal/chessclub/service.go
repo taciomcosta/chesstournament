@@ -5,7 +5,6 @@ import (
 
 	"github.com/taciomcosta/chesstournament/internal/model"
 	"github.com/taciomcosta/chesstournament/internal/repository"
-	"github.com/taciomcosta/chesstournament/internal/validator"
 )
 
 var UnexistingClubError = errors.New("Chess Club was not found")
@@ -27,7 +26,7 @@ func (s Service) GetClubById(id int) (*model.ChessClub, error) {
 }
 
 func (s Service) CreateChessclub(c *model.ChessClub) (*model.ChessClub, error) {
-	if err := validator.Validate(c); err != nil {
+	if err := model.Validate(c); err != nil {
 		return nil, err
 	}
 	return s.r.Add(c)
