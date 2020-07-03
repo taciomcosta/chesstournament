@@ -1,4 +1,4 @@
-package repository
+package model
 
 import (
 	"errors"
@@ -15,7 +15,7 @@ var minLimit = 0
 var maxLimit = 20
 var minOffset = 0
 
-func (f Filter) validate() error {
+func (f Filter) Validate() error {
 	if f.Limit < minLimit || f.Limit > maxLimit {
 		return fmt.Errorf("Limit must be between %d and %d", minLimit, maxLimit)
 	}

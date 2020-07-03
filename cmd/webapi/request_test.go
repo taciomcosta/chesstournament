@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/taciomcosta/chesstournament/internal/repository"
+	"github.com/taciomcosta/chesstournament/internal/model"
 
 	"strconv"
 )
@@ -23,15 +23,15 @@ func TestId(t *testing.T) {
 func TestNewFilter(t *testing.T) {
 	tests := []struct {
 		queryParams string
-		want        repository.Filter
+		want        model.Filter
 	}{
 		{
 			queryParams: "/?$top=1&$offset=2&$orderBy=p1 asc, p2 desc",
-			want:        repository.Filter{Limit: 1, Offset: 2, OrderBy: "p1 asc, p2 desc"},
+			want:        model.Filter{Limit: 1, Offset: 2, OrderBy: "p1 asc, p2 desc"},
 		},
 		{
 			queryParams: "/?$orderBy=p1 asc, p2 desc",
-			want:        repository.Filter{OrderBy: "p1 asc, p2 desc"},
+			want:        model.Filter{OrderBy: "p1 asc, p2 desc"},
 		},
 	}
 

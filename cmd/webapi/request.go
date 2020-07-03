@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
-	"github.com/taciomcosta/chesstournament/internal/repository"
+	"github.com/taciomcosta/chesstournament/internal/model"
 	"net/http"
 	"strconv"
 )
@@ -14,10 +14,8 @@ func id(r *http.Request) int {
 	return ID
 }
 
-// TODO: find a better name or abstraction
-// it's akward to have http concerns knowing about repository existence
-func newFilter(r *http.Request) repository.Filter {
-	var f repository.Filter
+func newFilter(r *http.Request) model.Filter {
+	var f model.Filter
 	r.ParseForm()
 	schema.NewDecoder().Decode(&f, r.Form)
 	return f

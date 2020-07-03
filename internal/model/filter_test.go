@@ -1,4 +1,4 @@
-package repository
+package model
 
 import "testing"
 
@@ -11,7 +11,7 @@ func TestFilter(t *testing.T) {
 func testEmptyFilter(t *testing.T) {
 	var f Filter
 
-	err := f.validate()
+	err := f.Validate()
 
 	if err != nil {
 		t.Error("empty filter should be valid")
@@ -21,13 +21,13 @@ func testEmptyFilter(t *testing.T) {
 func testLimit(t *testing.T) {
 	f := Filter{Limit: minLimit - 1}
 
-	err := f.validate()
+	err := f.Validate()
 	if err.Error() != "Limit must be between 0 and 20" {
 		t.Error("should return error regarding Limit")
 	}
 
 	f.Limit = maxLimit + 1
-	err = f.validate()
+	err = f.Validate()
 
 	if err.Error() != "Limit must be between 0 and 20" {
 		t.Error("should return error regarding Limit")
@@ -36,7 +36,7 @@ func testLimit(t *testing.T) {
 
 func testOffset(t *testing.T) {
 	f := Filter{Offset: minOffset - 1}
-	err := f.validate()
+	err := f.Validate()
 	if err.Error() != "Offset must be greater or equal to zero" {
 		t.Error("should return error regarding Limit")
 	}

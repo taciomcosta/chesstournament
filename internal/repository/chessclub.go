@@ -8,7 +8,7 @@ import (
 type ChessClub interface {
 	GetById(int) (*model.ChessClub, error)
 	Add(*model.ChessClub) (*model.ChessClub, error)
-	ListClubs(Filter) ([]model.ChessClub, error)
+	ListClubs(model.Filter) ([]model.ChessClub, error)
 	Remove(*model.ChessClub) error
 }
 
@@ -23,18 +23,16 @@ func (r ChessClubRepository) GetById(id int) (*model.ChessClub, error) {
 }
 
 func (r ChessClubRepository) Add(c *model.ChessClub) (*model.ChessClub, error) {
-	_, err := db.Model(c).
-		OnConflict("(id) DO UPDATE").
-		Insert()
+	_, err := db.Model(c).OnConflict("(id) DO UPDATE").Insert()
 	if err != nil {
 		return nil, apperrors.InternalErr{}
 	}
 	return c, nil
 }
 
-func (r ChessClubRepository) ListClubs(lr Filter) ([]model.ChessClub, error) {
+func (r ChessClubRepository) ListClubs(lr model.Filter) ([]model.ChessClub, error) {
 	cs := make([]model.ChessClub, 0)
-	if err := lr.validate(); err != nil {
+	if err := lr.Validate(); err != nil {
 		return cs, err
 	}
 	err := db.Model(&cs).OrderExpr(lr.OrderBy).Offset(lr.Offset).Limit(lr.Limit).Select()
