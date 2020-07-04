@@ -27,7 +27,7 @@ func tryRespondWithError(w http.ResponseWriter, httpStatus int, err error) bool 
 }
 
 func respondWithError(w http.ResponseWriter, httpStatus int, err error) {
-	if _, ok := err.(model.InternalErr); ok {
+	if err == model.UnknownError {
 		w.WriteHeader(http.StatusInternalServerError)
 	} else {
 		w.WriteHeader(httpStatus)

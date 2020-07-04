@@ -1,4 +1,4 @@
-package chessclub
+package shared
 
 import (
 	"testing"

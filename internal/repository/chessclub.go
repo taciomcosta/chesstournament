@@ -24,7 +24,7 @@ func (r ChessClubRepository) GetById(id int) (*model.ChessClub, error) {
 func (r ChessClubRepository) Add(c *model.ChessClub) (*model.ChessClub, error) {
 	_, err := db.Model(c).OnConflict("(id) DO UPDATE").Insert()
 	if err != nil {
-		return nil, model.InternalErr{}
+		return nil, model.UnknownError
 	}
 	return c, nil
 }

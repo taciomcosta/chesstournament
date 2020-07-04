@@ -5,15 +5,15 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/taciomcosta/chesstournament/internal/chessclub"
 	"github.com/taciomcosta/chesstournament/internal/model"
 	"github.com/taciomcosta/chesstournament/internal/repository"
+	"github.com/taciomcosta/chesstournament/internal/shared"
 )
 
-var s *chessclub.Service
+var s *shared.Service
 
 func init() {
-	s = chessclub.NewService(repository.ChessClubRepository{})
+	s = shared.NewService(repository.ChessClubRepository{})
 }
 
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {

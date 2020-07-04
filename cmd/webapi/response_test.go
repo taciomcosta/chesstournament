@@ -48,7 +48,7 @@ func testRespondWithError(t *testing.T) {
 			body:       `{"msg": "An internal error has occurred"}`,
 			status:     http.StatusBadRequest,
 			wantStatus: http.StatusInternalServerError,
-			err:        model.InternalErr{},
+			err:        model.UnknownError,
 			ok:         true,
 		},
 	}

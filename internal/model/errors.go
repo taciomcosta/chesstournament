@@ -1,7 +1,11 @@
 package model
 
-type InternalErr struct{}
+import (
+	"errors"
+)
 
-func (e InternalErr) Error() string {
-	return "An internal error has occurred"
-}
+var UnknownError = errors.New("An internal error has occurred")
+
+var UnexistingClubError = errors.New("Chess Club was not found")
+
+var InvalidModelError error = errors.New("Model is invalid")
