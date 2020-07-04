@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -15,7 +15,7 @@ func main() {
 	addSwagger(r)
 	addHandlers(r)
 	addMiddlewares(r)
-	fmt.Printf("Server listening on %s\n", config.String("HOST"))
+	log.Printf("Server listening on %s\n", config.String("HOST"))
 	http.Handle("/", r)
 	http.ListenAndServe(config.String("HOST"), nil)
 }
@@ -34,5 +34,6 @@ func addHandlers(r *mux.Router) {
 }
 
 func addMiddlewares(r *mux.Router) {
+	r.Use(loggerMiddleware)
 	r.Use(headersMiddleware)
 }

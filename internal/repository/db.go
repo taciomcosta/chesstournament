@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/go-pg/pg/v10"
 	"github.com/go-pg/pg/v10/orm"
@@ -30,7 +30,7 @@ func connect() *pg.DB {
 		Password: config.String("DB_PASSWORD"),
 		Database: config.String("DB_DATABASE"),
 		OnConnect: func(*pg.Conn) error {
-			fmt.Println("Connected to Postgres successfully!")
+			log.Println("Connected to Postgres successfully!")
 			return nil
 		},
 	})
