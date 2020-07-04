@@ -24,22 +24,18 @@ You can also benefit from other useful `make` commands already configured, like:
 ```
 ├── cmd // contains apps entrypoints (delivery mechanisms)
 │   | 
-│   └── webapi // REST app 
-|       |
-│       ├── handlers
-│       │   ├── chessclub.go
-│       │   └── chessclub_test.go
-│       └── main.go
-├── internal // contains non-reusable packages
+│   └── webapi // REST WebAPI app 
+├── internal // contains internally reusable packages
 |   |
-│   └── chessclub 
-│       ├── chessclub.go
-│       ├── chessclub_mock.go
-│       └── chessclub_test.go
-└── README.md
+│   └── shared // services/use-cases shared by stakeholders
+│   └── metrics // services/use-cases used by stakeholders interested in metrics
+│   └── model // domain model layer
+│   └── data // data source layer
+│   └── config // environment configuration
+├── swagger // swagger assets 
 ```
 
-## Features
+## TODO
 - [ ] Basic CRUD operations for *Chess Club, Player, Tournament, Match, Organizer and  Sponsor*
 - [ ] REST API & Swagger docs
 - [ ] CLI API
