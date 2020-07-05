@@ -4,13 +4,6 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
-type ChessClub interface {
-	GetById(int) (*model.ChessClub, error)
-	Add(*model.ChessClub) (*model.ChessClub, error)
-	ListClubs(model.Filter) ([]model.ChessClub, error)
-	Remove(*model.ChessClub) error
-}
-
 type ChessClubRepository struct{}
 
 func (r ChessClubRepository) GetById(id int) (*model.ChessClub, error) {

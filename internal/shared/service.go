@@ -2,15 +2,14 @@ package shared
 
 import (
 	"github.com/taciomcosta/chesstournament/internal/model"
-	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
-func NewService(r repository.ChessClub) *Service {
+func NewService(r model.ChessClubRepository) *Service {
 	return &Service{r}
 }
 
 type Service struct {
-	r repository.ChessClub
+	r model.ChessClubRepository
 }
 
 func (s Service) GetClubById(id int) (*model.ChessClub, error) {

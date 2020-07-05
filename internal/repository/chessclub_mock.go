@@ -6,9 +6,9 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
-type MockChessClub struct{}
+type MockChessClubRepository struct{}
 
-func (r *MockChessClub) GetById(id int) (*model.ChessClub, error) {
+func (r *MockChessClubRepository) GetById(id int) (*model.ChessClub, error) {
 	club := mockClubs()
 	for _, c := range club {
 		if c.Id == id {
@@ -18,7 +18,7 @@ func (r *MockChessClub) GetById(id int) (*model.ChessClub, error) {
 	return nil, errors.New("Non-existing resource")
 }
 
-func (r *MockChessClub) ListClubs(f model.Filter) ([]model.ChessClub, error) {
+func (r *MockChessClubRepository) ListClubs(f model.Filter) ([]model.ChessClub, error) {
 	if f.OrderBy == "invalid" {
 		return []model.ChessClub{}, errors.New("invalid query")
 
@@ -26,7 +26,7 @@ func (r *MockChessClub) ListClubs(f model.Filter) ([]model.ChessClub, error) {
 	return mockClubs(), nil
 }
 
-func (r *MockChessClub) Add(c *model.ChessClub) (*model.ChessClub, error) {
+func (r *MockChessClubRepository) Add(c *model.ChessClub) (*model.ChessClub, error) {
 	return c, nil
 }
 
@@ -40,6 +40,6 @@ func mockClubs() []model.ChessClub {
 	}
 }
 
-func (r *MockChessClub) Remove(c *model.ChessClub) error {
+func (r *MockChessClubRepository) Remove(c *model.ChessClub) error {
 	return nil
 }

@@ -13,7 +13,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	s = shared.NewService(&repository.MockChessClub{})
+	s = shared.NewService(&repository.MockChessClubRepository{})
 	os.Exit(m.Run())
 }
 
