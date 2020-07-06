@@ -22,7 +22,7 @@ func main() {
 
 func addSwagger(r *mux.Router) {
 	fs := http.FileServer(http.Dir("./swagger/"))
-	r.PathPrefix(swaggerURLPath).Handler(http.StripPrefix(swaggerURLPath, fs))
+	r.PathPrefix(swaggerURLPath).Handler(http.StripPrefix("/v1/swagger", fs))
 }
 
 func addHandlers(r *mux.Router) {
