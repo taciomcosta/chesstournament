@@ -1,4 +1,4 @@
-package repository
+package data
 
 import (
 	"github.com/taciomcosta/chesstournament/internal/model"

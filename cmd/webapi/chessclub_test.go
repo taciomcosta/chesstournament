@@ -8,12 +8,12 @@ import (
 	"testing"
 
 	"github.com/gorilla/mux"
-	"github.com/taciomcosta/chesstournament/internal/repository"
+	"github.com/taciomcosta/chesstournament/internal/data"
 	"github.com/taciomcosta/chesstournament/internal/shared"
 )
 
 func TestMain(m *testing.M) {
-	s = shared.NewService(&repository.MockChessClubRepository{})
+	s = shared.NewService(&data.MockChessClubRepository{})
 	os.Exit(m.Run())
 }
 

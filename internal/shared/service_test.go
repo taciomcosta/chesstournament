@@ -3,14 +3,14 @@ package shared
 import (
 	"testing"
 
+	"github.com/taciomcosta/chesstournament/internal/data"
 	"github.com/taciomcosta/chesstournament/internal/model"
-	"github.com/taciomcosta/chesstournament/internal/repository"
 )
 
 var s Service
 
 func TestNewService(t *testing.T) {
-	service := NewService(&repository.MockChessClubRepository{})
+	service := NewService(&data.MockChessClubRepository{})
 	if service == nil {
 		t.Error("it should return a *chessclub.Service")
 	}
@@ -25,7 +25,7 @@ func TestGetClubId(t *testing.T) {
 		{1, true, false},
 		{-1, false, true},
 	}
-	s := NewService(&repository.MockChessClubRepository{})
+	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		c, err := s.GetClubById(tt.id)
@@ -48,7 +48,7 @@ func TestCreateChessclub(t *testing.T) {
 		{&model.ChessClub{}, false, true},
 	}
 
-	s := NewService(&repository.MockChessClubRepository{})
+	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		c, err := s.CreateChessclub(tt.c)
@@ -71,7 +71,7 @@ func TestListClubs(t *testing.T) {
 		{model.Filter{OrderBy: "invalid"}, false, true},
 	}
 
-	s := NewService(&repository.MockChessClubRepository{})
+	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		cs, err := s.ListClubs(tt.r)
@@ -107,7 +107,7 @@ func TestDeleteClub(t *testing.T) {
 		},
 	}
 
-	s := NewService(&repository.MockChessClubRepository{})
+	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		c, err := s.DeleteClub(tt.clubId)
@@ -148,7 +148,7 @@ func TestEditChessclub(t *testing.T) {
 		},
 	}
 
-	s := NewService(&repository.MockChessClubRepository{})
+	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		err := s.EditChessclub(tt.id, tt.c)
