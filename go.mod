@@ -9,4 +9,6 @@ require (
 	github.com/gorilla/mux v1.7.4
 	github.com/gorilla/schema v1.1.0
 	github.com/joho/godotenv v1.3.0
+	github.com/josharian/impl v1.0.0 // indirect
+	golang.org/x/tools v0.0.0-20200709181711-e327e1019dfe // indirect
 )

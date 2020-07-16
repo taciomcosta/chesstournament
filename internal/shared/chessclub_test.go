@@ -7,15 +7,6 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
-var s Service
-
-func TestNewService(t *testing.T) {
-	service := NewService(&data.MockChessClubRepository{})
-	if service == nil {
-		t.Error("it should return a *chessclub.Service")
-	}
-}
-
 func TestGetClubId(t *testing.T) {
 	var tests = []struct {
 		id          int
@@ -25,7 +16,6 @@ func TestGetClubId(t *testing.T) {
 		{1, true, false},
 		{-1, false, true},
 	}
-	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		c, err := s.GetClubById(tt.id)
@@ -39,16 +29,14 @@ func TestGetClubId(t *testing.T) {
 }
 
 func TestCreateChessclub(t *testing.T) {
-	var tests = []struct {
+	tests := []struct {
 		c           *model.ChessClub
 		expectsClub bool
 		expectsErr  bool
 	}{
-		{&model.ChessClub{Id: 0, Name: "name", Address: "address"}, true, false},
-		{&model.ChessClub{}, false, true},
+		{&data.MockValidChessClub, true, false},
+		{&data.MockInvalidChessClub, false, true},
 	}
-
-	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		c, err := s.CreateChessclub(tt.c)
@@ -70,8 +58,6 @@ func TestListClubs(t *testing.T) {
 		{model.Filter{}, true, false},
 		{model.Filter{OrderBy: "invalid"}, false, true},
 	}
-
-	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		cs, err := s.ListClubs(tt.r)
@@ -106,8 +92,6 @@ func TestDeleteClub(t *testing.T) {
 			description: "should return error for non-existing chessclub",
 		},
 	}
-
-	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		c, err := s.DeleteClub(tt.clubId)
@@ -147,8 +131,6 @@ func TestEditChessclub(t *testing.T) {
 			description: "should not edit club with invalid/empty paramters",
 		},
 	}
-
-	s := NewService(&data.MockChessClubRepository{})
 
 	for _, tt := range tests {
 		err := s.EditChessclub(tt.id, tt.c)

@@ -39,6 +39,7 @@ func connect() *pg.DB {
 func createSchema(db *pg.DB) error {
 	models := []interface{}{
 		(*model.ChessClub)(nil),
+		(*model.Player)(nil),
 	}
 	for _, model := range models {
 		db.CreateTable(model, &orm.CreateTableOptions{})
