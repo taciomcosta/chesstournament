@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/taciomcosta/chesstournament/internal/model"
@@ -17,36 +15,25 @@ func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
-	c, err := readChessclubFromBody(r)
+	c := readChessclubFromBody(r)
+	_, err := s.CreateChessclub(c)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
-
-	_, err = s.CreateChessclub(c)
-
-	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
-		return
-	}
-
 	w.WriteHeader(http.StatusCreated)
 	respond(w, c)
 }
 
-func readChessclubFromBody(r *http.Request) (*model.ChessClub, error) {
+func readChessclubFromBody(r *http.Request) *model.ChessClub {
 	c := new(model.ChessClub)
-	b, _ := ioutil.ReadAll(r.Body)
-	r.Body.Close()
-	err := json.Unmarshal(b, c)
-	return c, err
+	unmarshalJsonBody(r, c)
+	return c
 }
 
 func EditChessclubHandler(w http.ResponseWriter, r *http.Request) {
-	c, err := readChessclubFromBody(r)
-	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
-		return
-	}
+	c := readChessclubFromBody(r)
 
-	err = s.EditChessclub(id(r), c)
+	err := s.EditChessclub(id(r), c)
 
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return

@@ -3,7 +3,7 @@ package model
 type Player struct {
 	Id        int     `json:"id" pg:",pk"`
 	ClubId    int     `validate:"required" json:"clubId"`
-	Ranking   Ranking `validate:"required" json:"rankingCode"`
+	Ranking   Ranking `validate:"required,min=1,max=3" json:"rankingCode"`
 	FirstName string  `validate:"required" json:"firstName"`
 	LastName  string  `validate:"required" json:"lastName"`
 	Address   string  `validate:"required" json:"address"`

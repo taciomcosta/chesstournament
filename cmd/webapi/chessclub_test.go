@@ -40,24 +40,27 @@ func TestGetChessclubDetails(t *testing.T) {
 }
 
 func TestCreateChessclub(t *testing.T) {
+	validBody := `{"name": "name", "address": "address"}`
+	invalidBody := `{"name": "", "address": ""}`
+	testCreateHandler(validBody, invalidBody, CreateChessclubHandler, t)
+}
+
+func testCreateHandler(validBody string, invalidBody string, handler http.HandlerFunc, t *testing.T) {
 	tests := []struct {
 		body   string
 		status int
 	}{
-		{`{"name": "name", "address": "address"}`, http.StatusCreated},
-		{`{invalid: json}`, http.StatusBadRequest},
-		{`{"name": "", "address": ""}`, http.StatusBadRequest},
+		{validBody, http.StatusCreated},
+		{invalidBody, http.StatusBadRequest},
 	}
 
 	for _, tt := range tests {
-		body := strings.NewReader(tt.body)
-		w, _ := http.NewRequest("POST", "/chessclubs", body)
+		reader := strings.NewReader(tt.body)
+		w, _ := http.NewRequest("POST", "/resource", reader)
 		r := httptest.NewRecorder()
-
-		CreateChessclubHandler(r, w)
-
+		handler(r, w)
 		if r.Code != tt.status {
-			t.Errorf("it should return status code BadRequest, got %v", r.Code)
+			t.Errorf("want http status %v, got %v", tt.status, r.Code)
 		}
 	}
 }
@@ -69,7 +72,6 @@ func TestEditChessclub(t *testing.T) {
 		status int
 	}{
 		{`{"name": "name", "address": "address"}`, "1", http.StatusOK},
-		{`{invalid: json}`, "1", http.StatusBadRequest},
 		{`{"name": "", "address": ""}`, "1", http.StatusBadRequest},
 	}
 
