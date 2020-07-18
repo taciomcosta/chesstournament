@@ -16,3 +16,10 @@ func (r PlayerRepository) Add(p *model.Player) (*model.Player, error) {
 	}
 	return p, nil
 }
+
+func (r PlayerRepository) FindOne(criteria *model.Player) (*model.Player, error) {
+	if err := db.Select(criteria); err != nil {
+		return nil, err
+	}
+	return criteria, nil
+}

@@ -7,11 +7,8 @@ import (
 )
 
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
-	c, err := s.GetClubById(id(r))
-	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
-		return
-	}
-	respond(w, c)
+	f := func(id int) (interface{}, error) { return s.GetClubById(id) }
+	getDetails(w, r, f)
 }
 
 func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {

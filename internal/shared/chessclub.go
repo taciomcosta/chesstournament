@@ -5,11 +5,7 @@ import (
 )
 
 func (s service) GetClubById(id int) (*model.ChessClub, error) {
-	club, err := s.chessclubRepository.GetById(id)
-	if err != nil {
-		return nil, model.UnexistingClubError
-	}
-	return club, nil
+	return s.chessclubRepository.GetById(id)
 }
 
 func (s service) CreateChessclub(c *model.ChessClub) (*model.ChessClub, error) {

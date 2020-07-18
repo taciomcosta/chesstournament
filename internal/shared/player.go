@@ -13,3 +13,11 @@ func (s service) CreatePlayer(p *model.Player) (*model.Player, error) {
 	}
 	return s.playerRepository.Add(p)
 }
+
+func (s service) GetPlayerById(id int) (*model.Player, error) {
+	p, err := s.playerRepository.FindOne(&model.Player{Id: id})
+	if err != nil {
+		return nil, model.UnexistingError
+	}
+	return p, nil
+}

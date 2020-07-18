@@ -20,3 +20,7 @@ func TestCreatePlayer(t *testing.T) {
 	invalidBody := `{"id": 0}`
 	testCreateHandler(validBody, invalidBody, CreatePlayerHandler, t)
 }
+
+func TestGetPlayerDetails(t *testing.T) {
+	testGetDetails(GetPlayerDetailsHandler, t)
+}

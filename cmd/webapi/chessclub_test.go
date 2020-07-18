@@ -18,6 +18,10 @@ func TestMain(m *testing.M) {
 }
 
 func TestGetChessclubDetails(t *testing.T) {
+	testGetDetails(GetChessclubDetailsHandler, t)
+}
+
+func testGetDetails(getDetailsFunc http.HandlerFunc, t *testing.T) {
 	tests := []struct {
 		vars   map[string]string
 		status int
@@ -27,11 +31,11 @@ func TestGetChessclubDetails(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		w, _ := http.NewRequest("GET", "/chessclubs/10000", nil)
+		w, _ := http.NewRequest("GET", "/some_route/10000", nil)
 		w = mux.SetURLVars(w, tt.vars)
 		r := httptest.NewRecorder()
 
-		GetChessclubDetailsHandler(r, w)
+		getDetailsFunc(r, w)
 
 		if r.Code != tt.status {
 			t.Errorf("want status %v, got %v", tt.status, r.Code)

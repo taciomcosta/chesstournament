@@ -7,25 +7,9 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
-func TestGetClubId(t *testing.T) {
-	var tests = []struct {
-		id          int
-		expectsClub bool
-		expectsErr  bool
-	}{
-		{1, true, false},
-		{-1, false, true},
-	}
-
-	for _, tt := range tests {
-		c, err := s.GetClubById(tt.id)
-		if tt.expectsClub && c == nil {
-			t.Error("it should return a Chess Club")
-		}
-		if tt.expectsErr && err == nil {
-			t.Error("it should return an error")
-		}
-	}
+func TestGetClubById(t *testing.T) {
+	f := func(id int) (interface{}, error) { return s.GetClubById(id) }
+	testGetById(f, t)
 }
 
 func TestCreateChessclub(t *testing.T) {

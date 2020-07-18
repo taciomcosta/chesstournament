@@ -45,8 +45,31 @@ func TestCreatePlayer(t *testing.T) {
 	}
 }
 
-/*
-[x] should return created player
-[x] should not create an invalid player
-[ ] should not create a player for a non-existing club
-*/
+func TestGetPlayerById(t *testing.T) {
+	f := func(id int) (interface{}, error) { return s.GetPlayerById(id) }
+	testGetById(f, t)
+}
+
+type getFunc func(int) (interface{}, error)
+
+func testGetById(get getFunc, t *testing.T) {
+	var tests = []struct {
+		id            int
+		expectsPlayer bool
+		expectsErr    bool
+	}{
+		{1, true, false},
+		{-1, false, true},
+	}
+
+	for _, tt := range tests {
+		c, err := get(tt.id)
+		if tt.expectsPlayer && c == nil {
+			t.Error("it should return a Player")
+		}
+		if tt.expectsErr && err == nil {
+			t.Error("it should return an error")
+		}
+	}
+
+}

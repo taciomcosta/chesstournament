@@ -32,6 +32,7 @@ func addHandlers(r *mux.Router) {
 	r.HandleFunc("/chessclubs", CreateChessclubHandler).Methods("POST")
 	r.HandleFunc("/chessclubs/{id}", DeleteChessclubHandler).Methods("DELETE")
 	r.HandleFunc("/chessclubs/{id}", EditChessclubHandler).Methods("PUT")
+	r.HandleFunc("/players/{id}", GetPlayerDetailsHandler).Methods("GET")
 	r.HandleFunc("/players", CreatePlayerHandler).Methods("POST")
 }
 

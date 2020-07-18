@@ -29,3 +29,18 @@ func unmarshalJsonBody(r *http.Request, v interface{}) {
 	r.Body.Close()
 	json.Unmarshal(b, v)
 }
+
+func GetPlayerDetailsHandler(w http.ResponseWriter, r *http.Request) {
+	f := func(id int) (interface{}, error) { return s.GetPlayerById(id) }
+	getDetails(w, r, f)
+}
+
+type getDetailsFunc func(id int) (interface{}, error)
+
+func getDetails(w http.ResponseWriter, r *http.Request, getDetails getDetailsFunc) {
+	v, err := getDetails(id(r))
+	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
+		return
+	}
+	respond(w, v)
+}

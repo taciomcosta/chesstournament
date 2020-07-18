@@ -11,6 +11,7 @@ type Service interface {
 	ListClubs(r model.Filter) ([]model.ChessClub, error)
 	DeleteClub(id int) (*model.ChessClub, error)
 	CreatePlayer(p *model.Player) (*model.Player, error)
+	GetPlayerById(id int) (*model.Player, error)
 }
 
 func NewService(c model.ChessClubRepository, p model.PlayerRepository) Service {
