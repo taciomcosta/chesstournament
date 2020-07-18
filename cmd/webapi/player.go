@@ -37,8 +37,8 @@ func GetPlayerDetailsHandler(w http.ResponseWriter, r *http.Request) {
 
 type getDetailsFunc func(id int) (interface{}, error)
 
-func getDetails(w http.ResponseWriter, r *http.Request, getDetails getDetailsFunc) {
-	v, err := getDetails(id(r))
+func getDetails(w http.ResponseWriter, r *http.Request, get getDetailsFunc) {
+	v, err := get(getIdFromRequest(r))
 	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
 		return
 	}

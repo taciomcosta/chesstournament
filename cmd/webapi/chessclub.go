@@ -30,7 +30,7 @@ func readChessclubFromBody(r *http.Request) *model.ChessClub {
 func EditChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	c := readChessclubFromBody(r)
 
-	err := s.EditChessclub(id(r), c)
+	err := s.EditChessclub(getIdFromRequest(r), c)
 
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
@@ -50,7 +50,7 @@ func ListChessclubsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteChessclubHandler(w http.ResponseWriter, r *http.Request) {
-	c, err := s.DeleteClub(id(r))
+	c, err := s.DeleteClub(getIdFromRequest(r))
 	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
 		return
 	}

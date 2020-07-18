@@ -14,7 +14,7 @@ func TestId(t *testing.T) {
 	want := 5
 	w, _ := http.NewRequest("GET", "/", nil)
 	w = mux.SetURLVars(w, map[string]string{"id": strconv.Itoa(want)})
-	got := id(w)
+	got := getIdFromRequest(w)
 	if got != want {
 		t.Errorf("want %d, got %d", want, got)
 	}

@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func id(r *http.Request) int {
+func getIdFromRequest(r *http.Request) int {
 	vars := mux.Vars(r)
 	ID, _ := strconv.Atoi(vars["id"])
 	return ID
