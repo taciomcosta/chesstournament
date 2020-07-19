@@ -12,3 +12,7 @@ type ChessClubRepository interface {
 	ListClubs(Filter) ([]ChessClub, error)
 	Remove(*ChessClub) error
 }
+
+type Repository interface {
+	FindOne(v interface{}) (interface{}, error)
+}

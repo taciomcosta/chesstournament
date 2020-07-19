@@ -6,6 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/taciomcosta/chesstournament/internal/data"
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
@@ -78,5 +79,13 @@ func testDontRespondWithError(t *testing.T) {
 	want := false
 	if want != got {
 		t.Errorf("OK: want %v, got %v", want, got)
+	}
+}
+
+func TestToJsonString(t *testing.T) {
+	want := `{"id":1,"name":"QueenClub","address":"Neverland"}`
+	got := toJSONString(data.MockValidChessClub)
+	if got != want {
+		t.Errorf("want %s, got %s", want, got)
 	}
 }

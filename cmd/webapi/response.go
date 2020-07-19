@@ -9,13 +9,17 @@ import (
 )
 
 func respond(w http.ResponseWriter, data interface{}) {
-	json := mustJSON(data)
+	json := toJSONBytes(data)
 	w.Write(json)
 }
 
-func mustJSON(v interface{}) []byte {
+func toJSONBytes(v interface{}) []byte {
 	json, _ := json.Marshal(v)
 	return json
+}
+
+func toJSONString(v interface{}) string {
+	return string(toJSONBytes(v))
 }
 
 func tryRespondWithError(w http.ResponseWriter, httpStatus int, err error) bool {

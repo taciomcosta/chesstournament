@@ -4,136 +4,121 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
 	"github.com/taciomcosta/chesstournament/internal/data"
 	"github.com/taciomcosta/chesstournament/internal/shared"
 )
 
 func TestMain(m *testing.M) {
-	s = shared.NewService(&data.MockChessClubRepository{}, data.MockPlayerRepository{})
+	s = shared.NewService(&data.MockRepository{}, &data.MockChessClubRepository{}, data.MockPlayerRepository{})
 	os.Exit(m.Run())
 }
 
 func TestGetChessclubDetails(t *testing.T) {
-	testGetDetails(GetChessclubDetailsHandler, t)
+	testGetDetailsHandler(t, GetChessclubDetailsHandler)
 }
 
-func testGetDetails(getDetailsFunc http.HandlerFunc, t *testing.T) {
-	tests := []struct {
-		vars   map[string]string
-		status int
-	}{
-		{map[string]string{"id": "1"}, http.StatusOK},
-		{map[string]string{"id": "unexistent"}, http.StatusNotFound},
-	}
+func TestGetUnexistingChessclubDetails(t *testing.T) {
+	testGetUnexistentDetailsHandler(t, GetChessclubDetailsHandler)
+}
 
-	for _, tt := range tests {
-		w, _ := http.NewRequest("GET", "/some_route/10000", nil)
-		w = mux.SetURLVars(w, tt.vars)
-		r := httptest.NewRecorder()
+func testGetDetailsHandler(t *testing.T, handle http.HandlerFunc) {
+	request := newRequestBuilder().withPathVar("id", "1").build()
+	recorder := httptest.NewRecorder()
 
-		getDetailsFunc(r, w)
+	handle(recorder, request)
 
-		if r.Code != tt.status {
-			t.Errorf("want status %v, got %v", tt.status, r.Code)
-		}
+	thenAssertRecorderStatusIs(t, recorder, http.StatusOK)
+}
+
+func testGetUnexistentDetailsHandler(t *testing.T, handle http.HandlerFunc) {
+	request := newRequestBuilder().withPathVar("id", "unexistent").build()
+	recorder := httptest.NewRecorder()
+
+	handle(recorder, request)
+
+	thenAssertRecorderStatusIs(t, recorder, http.StatusNotFound)
+}
+
+func thenAssertRecorderStatusIs(t *testing.T, recorder *httptest.ResponseRecorder, status int) {
+	if recorder.Code != status {
+		t.Errorf("want status %v, got %v", status, recorder.Code)
 	}
 }
 
 func TestCreateChessclub(t *testing.T) {
-	validBody := `{"name": "name", "address": "address"}`
-	invalidBody := `{"name": "", "address": ""}`
-	testCreateHandler(validBody, invalidBody, CreateChessclubHandler, t)
+	request := newRequestBuilder().withBody(toJSONString(data.MockValidChessClub)).build()
+	recorder := httptest.NewRecorder()
+
+	CreateChessclubHandler(recorder, request)
+
+	thenAssertRecorderStatusIs(t, recorder, http.StatusCreated)
 }
 
-func testCreateHandler(validBody string, invalidBody string, handler http.HandlerFunc, t *testing.T) {
-	tests := []struct {
-		body   string
-		status int
-	}{
-		{validBody, http.StatusCreated},
-		{invalidBody, http.StatusBadRequest},
-	}
+func TestCreateInvalidChessclub(t *testing.T) {
+	request := newRequestBuilder().withBody(`{"invalid": "body"}`).build()
+	recorder := httptest.NewRecorder()
 
-	for _, tt := range tests {
-		reader := strings.NewReader(tt.body)
-		w, _ := http.NewRequest("POST", "/resource", reader)
-		r := httptest.NewRecorder()
-		handler(r, w)
-		if r.Code != tt.status {
-			t.Errorf("want http status %v, got %v", tt.status, r.Code)
-		}
-	}
+	CreateChessclubHandler(recorder, request)
+
+	thenAssertRecorderStatusIs(t, recorder, http.StatusBadRequest)
 }
 
 func TestEditChessclub(t *testing.T) {
-	tests := []struct {
-		body   string
-		id     string
-		status int
-	}{
-		{`{"name": "name", "address": "address"}`, "1", http.StatusOK},
-		{`{"name": "", "address": ""}`, "1", http.StatusBadRequest},
-	}
+	recorder := httptest.NewRecorder()
+	request := newRequestBuilder().
+		withBody(toJSONString(data.MockValidChessClub)).
+		withPathVar("id", "1").build()
 
-	for _, tt := range tests {
-		body := strings.NewReader(tt.body)
-		w, _ := http.NewRequest("PUT", "/chessclubs/1", body)
-		w = mux.SetURLVars(w, map[string]string{"id": "1"})
-		r := httptest.NewRecorder()
+	EditChessclubHandler(recorder, request)
 
-		EditChessclubHandler(r, w)
+	thenAssertRecorderStatusIs(t, recorder, http.StatusOK)
+}
 
-		if r.Code != tt.status {
-			t.Errorf("want status %d, got %d", tt.status, r.Code)
-		}
-	}
+func TestEditChessclubInvalidBody(t *testing.T) {
+	recorder := httptest.NewRecorder()
+	request := newRequestBuilder().
+		withBody(toJSONString(`{"id":"1"}`)).
+		withPathVar("id", "1").build()
 
+	EditChessclubHandler(recorder, request)
+
+	thenAssertRecorderStatusIs(t, recorder, http.StatusBadRequest)
 }
 
 func TestListChessclubs(t *testing.T) {
-	tests := []struct {
-		queryParams string
-		status      int
-	}{
-		{"", http.StatusOK},
-		{"$orderBy=invalid", http.StatusBadRequest},
-	}
+	request := newRequestBuilder().build()
+	recorder := httptest.NewRecorder()
 
-	for _, tt := range tests {
-		url := "/chessclubs?" + tt.queryParams
-		w, _ := http.NewRequest("GET", url, nil)
-		r := httptest.NewRecorder()
+	ListChessclubsHandler(recorder, request)
 
-		ListChessclubsHandler(r, w)
+	thenAssertRecorderStatusIs(t, recorder, http.StatusOK)
+}
 
-		if r.Code != tt.status {
-			t.Errorf("want status %v, got %v", tt.status, r.Code)
-		}
-	}
+func TestListChessclubInvalidFilter(t *testing.T) {
+	request := newRequestBuilder().withQueryParam("$orderBy", "invalid").build()
+	recorder := httptest.NewRecorder()
+
+	ListChessclubsHandler(recorder, request)
+
+	thenAssertRecorderStatusIs(t, recorder, http.StatusBadRequest)
 }
 
 func TestDeleteChessclub(t *testing.T) {
-	tests := []struct {
-		vars   map[string]string
-		status int
-	}{
-		{map[string]string{"id": "1"}, http.StatusOK},
-		{map[string]string{"id": "-1"}, http.StatusNotFound},
-	}
+	request := newRequestBuilder().withPathVar("id", "1").build()
+	recorder := httptest.NewRecorder()
 
-	for _, tt := range tests {
-		w, _ := http.NewRequest("DELETE", "/chessclubs/10000", nil)
-		w = mux.SetURLVars(w, tt.vars)
-		r := httptest.NewRecorder()
+	DeleteChessclubHandler(recorder, request)
 
-		DeleteChessclubHandler(r, w)
+	thenAssertRecorderStatusIs(t, recorder, http.StatusOK)
+}
 
-		if r.Code != tt.status {
-			t.Errorf("want status %v, got %v", r.Code, tt.status)
-		}
-	}
+func TestDeleteUnexistentChessclub(t *testing.T) {
+	request := newRequestBuilder().withPathVar("id", "-1").build()
+	recorder := httptest.NewRecorder()
+
+	DeleteChessclubHandler(recorder, request)
+
+	thenAssertRecorderStatusIs(t, recorder, http.StatusNotFound)
 }

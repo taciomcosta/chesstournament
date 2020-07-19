@@ -11,6 +11,7 @@ var s Service
 
 func TestMain(m *testing.M) {
 	s = service{
+		repository:          &data.MockRepository{},
 		chessclubRepository: &data.MockChessClubRepository{},
 		playerRepository:    &data.MockPlayerRepository{},
 	}
@@ -18,7 +19,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestNewService(t *testing.T) {
-	service := NewService(&data.MockChessClubRepository{}, &data.MockPlayerRepository{})
+	service := NewService(&data.MockRepository{}, &data.MockChessClubRepository{}, &data.MockPlayerRepository{})
 	if service == nil {
 		t.Error("it should return a shared.Service")
 	}

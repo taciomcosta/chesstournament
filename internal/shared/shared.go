@@ -14,11 +14,14 @@ type Service interface {
 	GetPlayerById(id int) (*model.Player, error)
 }
 
-func NewService(c model.ChessClubRepository, p model.PlayerRepository) Service {
-	return service{c, p}
+func NewService(
+	repository model.Repository, chessclub model.ChessClubRepository, player model.PlayerRepository,
+) Service {
+	return service{repository, chessclub, player}
 }
 
 type service struct {
+	repository          model.Repository
 	chessclubRepository model.ChessClubRepository
 	playerRepository    model.PlayerRepository
 }

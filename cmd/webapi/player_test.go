@@ -1,26 +1,35 @@
 package main
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"testing"
+
+	"github.com/taciomcosta/chesstournament/internal/data"
 )
 
-func TestCreatePlayer(t *testing.T) {
-	validBody := `
-		{
-			"id": 1,
-			"clubId": 1,
-			"rankingCode": 1,
-			"firstName": "Tacio",
-			"lastName": "Costa",
-			"address": "Somewhere",
-			"phone": "12341234",
-			"email": "tacio@email.com"
-		}
-	`
-	invalidBody := `{"id": 0}`
-	testCreateHandler(validBody, invalidBody, CreatePlayerHandler, t)
+func TestGetPlayerDetails(t *testing.T) {
+	testGetDetailsHandler(t, GetPlayerDetailsHandler)
 }
 
-func TestGetPlayerDetails(t *testing.T) {
-	testGetDetails(GetPlayerDetailsHandler, t)
+func TestGetUnexistinPlayerDetails(t *testing.T) {
+	testGetUnexistentDetailsHandler(t, GetPlayerDetailsHandler)
+}
+
+func TestCreatePlayer(t *testing.T) {
+	request := newRequestBuilder().withBody(toJSONString(data.MockValidPlayer)).build()
+	recorder := httptest.NewRecorder()
+
+	CreatePlayerHandler(recorder, request)
+
+	thenAssertRecorderStatusIs(t, recorder, http.StatusCreated)
+}
+
+func TestCreateInvalidPlayer(t *testing.T) {
+	request := newRequestBuilder().withBody(`{"invalid": "body"}`).build()
+	recorder := httptest.NewRecorder()
+
+	CreatePlayerHandler(recorder, request)
+
+	thenAssertRecorderStatusIs(t, recorder, http.StatusBadRequest)
 }
