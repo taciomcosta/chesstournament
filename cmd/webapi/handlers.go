@@ -9,13 +9,23 @@ import (
 )
 
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
-	f := func(id int) (interface{}, error) { return s.GetClubById(id) }
+	f := func(id int) (interface{}, error) { return service.GetClubById(id) }
 	getDetails(w, r, f)
+}
+
+type getDetailsFunc func(id int) (interface{}, error)
+
+func getDetails(w http.ResponseWriter, r *http.Request, get getDetailsFunc) {
+	v, err := get(getIdFromRequest(r))
+	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
+		return
+	}
+	respond(w, v)
 }
 
 func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	c := readChessclubFromBody(r)
-	_, err := s.CreateChessclub(c)
+	_, err := service.CreateChessclub(c)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
@@ -29,22 +39,25 @@ func readChessclubFromBody(r *http.Request) *model.ChessClub {
 	return c
 }
 
+func unmarshalJsonBody(r *http.Request, v interface{}) {
+	b, _ := ioutil.ReadAll(r.Body)
+	r.Body.Close()
+	json.Unmarshal(b, v)
+}
+
 func EditChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	c := readChessclubFromBody(r)
-
-	err := s.EditChessclub(getIdFromRequest(r), c)
-
+	err := service.EditChessclub(getIdFromRequest(r), c)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
-
 	w.WriteHeader(http.StatusOK)
 	respond(w, c)
 }
 
 func ListChessclubsHandler(w http.ResponseWriter, r *http.Request) {
 	f := newFilter(r)
-	cs, err := s.ListClubs(f)
+	cs, err := service.ListClubs(f)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
@@ -52,7 +65,7 @@ func ListChessclubsHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteChessclubHandler(w http.ResponseWriter, r *http.Request) {
-	c, err := s.DeleteClub(getIdFromRequest(r))
+	c, err := service.DeleteClub(getIdFromRequest(r))
 	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
 		return
 	}
@@ -61,7 +74,7 @@ func DeleteChessclubHandler(w http.ResponseWriter, r *http.Request) {
 
 func CreatePlayerHandler(w http.ResponseWriter, r *http.Request) {
 	p := readPlayerFromBody(r)
-	_, err := s.CreatePlayer(p)
+	_, err := service.CreatePlayer(p)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
@@ -75,23 +88,7 @@ func readPlayerFromBody(r *http.Request) *model.Player {
 	return p
 }
 
-func unmarshalJsonBody(r *http.Request, v interface{}) {
-	b, _ := ioutil.ReadAll(r.Body)
-	r.Body.Close()
-	json.Unmarshal(b, v)
-}
-
 func GetPlayerDetailsHandler(w http.ResponseWriter, r *http.Request) {
-	f := func(id int) (interface{}, error) { return s.GetPlayerById(id) }
+	f := func(id int) (interface{}, error) { return service.GetPlayerById(id) }
 	getDetails(w, r, f)
-}
-
-type getDetailsFunc func(id int) (interface{}, error)
-
-func getDetails(w http.ResponseWriter, r *http.Request, get getDetailsFunc) {
-	v, err := get(getIdFromRequest(r))
-	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
-		return
-	}
-	respond(w, v)
 }

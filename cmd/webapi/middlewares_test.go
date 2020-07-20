@@ -24,29 +24,40 @@ func TestHeadersMiddleware(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		rr := requestWithMiddleware(headersMiddleware, tt.urlPath)
-		if got := rr.Header().Get("Content-Type"); got != tt.contentType {
-			t.Errorf("want %s, got %s", tt.contentType, got)
-		}
+		response := requestUsingMiddleware(tt.urlPath, headersMiddleware)
+		thenAssertResponseContentTypeIs(t, response, tt.contentType)
 	}
 }
 
-func requestWithMiddleware(m Middleware, urlPath string) *httptest.ResponseRecorder {
-	r, _ := http.NewRequest("GET", urlPath, nil)
-	rr := httptest.NewRecorder()
-	h := m(mockHandler{})
-	h.ServeHTTP(rr, r)
-	return rr
+func requestUsingMiddleware(urlPath string, middleware Middleware) http.ResponseWriter {
+	request, _ := http.NewRequest("GET", urlPath, nil)
+	recorder := httptest.NewRecorder()
+	handler := middleware(mockHandler{})
+	handler.ServeHTTP(recorder, request)
+	return recorder
+}
+
+func thenAssertResponseContentTypeIs(t *testing.T, response http.ResponseWriter, contentType string) {
+	got := response.Header().Get("Content-Type")
+	if got != contentType {
+		t.Errorf("want %s, got %s", contentType, got)
+	}
 }
 
 func TestLoggerMiddleware(t *testing.T) {
+	buffer := getLogOutputBuffer()
+	requestUsingMiddleware("/urlpath", loggerMiddleware)
+	thenAssertStringWasLoggedIntoBuffer(t, "GET/urlpath", buffer)
+}
+
+func getLogOutputBuffer() *bytes.Buffer {
 	b := new(bytes.Buffer)
 	log.SetOutput(b)
+	return b
+}
 
-	want := "GET/urlpath"
-	requestWithMiddleware(loggerMiddleware, "/urlpath")
-
-	if !strings.Contains(b.String(), want) {
-		t.Errorf("want %s, got %s", want, b.String())
+func thenAssertStringWasLoggedIntoBuffer(t *testing.T, expected string, buffer *bytes.Buffer) {
+	if !strings.Contains(buffer.String(), expected) {
+		t.Errorf("want %s logged, got %s", expected, buffer.String())
 	}
 }
