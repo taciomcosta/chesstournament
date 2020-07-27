@@ -34,6 +34,7 @@ func addHandlers(router *mux.Router) {
 	router.HandleFunc("/chessclubs/{id}", EditChessclubHandler).Methods("PUT")
 	router.HandleFunc("/players/{id}", GetPlayerDetailsHandler).Methods("GET")
 	router.HandleFunc("/players", CreatePlayerHandler).Methods("POST")
+	router.HandleFunc("/players/{id}", DeletePlayerHandler).Methods("DELETE")
 }
 
 func addMiddlewares(r *mux.Router) {

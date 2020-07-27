@@ -92,3 +92,11 @@ func GetPlayerDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	f := func(id int) (interface{}, error) { return service.GetPlayerById(id) }
 	getDetails(w, r, f)
 }
+
+func DeletePlayerHandler(w http.ResponseWriter, r *http.Request) {
+	player, err := service.DeletePlayer(getIdFromRequest(r))
+	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
+		return
+	}
+	respond(w, player)
+}

@@ -23,3 +23,7 @@ func (r PlayerRepository) FindOne(criteria *model.Player) (*model.Player, error)
 	}
 	return criteria, nil
 }
+
+func (r PlayerRepository) Remove(p *model.Player) error {
+	return db.Delete(p)
+}

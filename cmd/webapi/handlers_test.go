@@ -107,6 +107,18 @@ var handlerTests []handlerTest = []handlerTest{
 		handle:         CreatePlayerHandler,
 		expectedStatus: http.StatusBadRequest,
 	},
+	{
+		description:    "should handle Player deletion",
+		request:        newRequestBuilder().withPathVar("id", "1").build(),
+		handle:         DeletePlayerHandler,
+		expectedStatus: http.StatusOK,
+	},
+	{
+		description:    "should handle deletion of unexistent Player",
+		request:        newRequestBuilder().withPathVar("id", "-1").build(),
+		handle:         DeletePlayerHandler,
+		expectedStatus: http.StatusNotFound,
+	},
 }
 
 func TestHandlers(t *testing.T) {

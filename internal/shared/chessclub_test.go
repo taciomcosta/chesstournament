@@ -12,25 +12,16 @@ func TestGetClubById(t *testing.T) {
 	testGetById(f, t)
 }
 
-func TestCreateChessclub(t *testing.T) {
-	tests := []struct {
-		c           *model.ChessClub
-		expectsClub bool
-		expectsErr  bool
-	}{
-		{&data.MockValidChessClub, true, false},
-		{&data.MockInvalidChessClub, false, true},
-	}
+func TestCreateChessclub2(t *testing.T) {
+	club, err := s.CreateChessclub(&data.MockValidChessClub)
+	thenAssertValueIs(t, *club, data.MockValidChessClub)
+	thenAssertErrorIsNil(t, err)
+}
 
-	for _, tt := range tests {
-		c, err := s.CreateChessclub(tt.c)
-		if tt.expectsClub && c == nil {
-			t.Error("it should return created chessclub")
-		}
-		if tt.expectsErr && err == nil {
-			t.Error("it should return an error")
-		}
-	}
+func TestCreateInvalidChessclub(t *testing.T) {
+	club, err := s.CreateChessclub(&data.MockInvalidChessClub)
+	thenAssertValueIsNil(t, club)
+	thenAssertErrorIs(t, err, model.InvalidModelError{Msg: "Invalid fields: Name,Address"})
 }
 
 func TestListClubs(t *testing.T) {
@@ -57,36 +48,15 @@ func TestListClubs(t *testing.T) {
 }
 
 func TestDeleteClub(t *testing.T) {
-	tests := []struct {
-		clubId      int
-		clubExists  bool
-		expectsErr  bool
-		description string
-	}{
-		{
-			clubId:      1,
-			clubExists:  true,
-			expectsErr:  false,
-			description: "should return delete chess club",
-		},
-		{
-			clubId:      -1,
-			clubExists:  false,
-			expectsErr:  true,
-			description: "should return error for non-existing chessclub",
-		},
-	}
+	club, err := s.DeleteClub(1)
+	thenAssertValueIs(t, *club, data.MockValidChessClub)
+	thenAssertErrorIsNil(t, err)
+}
 
-	for _, tt := range tests {
-		c, err := s.DeleteClub(tt.clubId)
-		if tt.clubExists && c == nil {
-			t.Error(tt.description)
-		}
-
-		if tt.expectsErr && err == nil {
-			t.Error(tt.description)
-		}
-	}
+func TestDeleteUnexistentClub(t *testing.T) {
+	club, err := s.DeleteClub(-1)
+	thenAssertValueIsNil(t, club)
+	thenAssertErrorIs(t, err, model.UnexistingError)
 }
 
 func TestEditChessclub(t *testing.T) {

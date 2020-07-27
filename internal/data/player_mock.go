@@ -46,3 +46,7 @@ func (r MockPlayerRepository) FindOne(criteria *model.Player) (*model.Player, er
 	}
 	return nil, model.UnexistingError
 }
+
+func (r MockPlayerRepository) Remove(p *model.Player) error {
+	return nil
+}

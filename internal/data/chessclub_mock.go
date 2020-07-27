@@ -19,13 +19,12 @@ var mockClubs []model.ChessClub = []model.ChessClub{MockValidChessClub}
 type MockChessClubRepository struct{}
 
 func (r *MockChessClubRepository) GetById(id int) (*model.ChessClub, error) {
-	club := mockClubs
-	for _, c := range club {
-		if c.Id == id {
-			return &c, nil
+	for _, club := range mockClubs {
+		if club.Id == id {
+			return &club, nil
 		}
 	}
-	return nil, errors.New("Non-existing resource")
+	return nil, model.UnexistingError
 }
 
 func (r *MockChessClubRepository) ListClubs(f model.Filter) ([]model.ChessClub, error) {

@@ -22,4 +22,5 @@ const (
 type PlayerRepository interface {
 	Add(*Player) (*Player, error)
 	FindOne(*Player) (*Player, error)
+	Remove(*Player) error
 }

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"errors"
 	"strings"
 
 	v10Validator "github.com/go-playground/validator/v10"
@@ -20,5 +19,6 @@ func formattedErrors(errs error) error {
 	for _, err := range errs.(v10Validator.ValidationErrors) {
 		fs = append(fs, err.Field())
 	}
-	return errors.New("Invalid fields: " + strings.Join(fs, ","))
+	msg := "Invalid fields: " + strings.Join(fs, ",")
+	return InvalidModelError{Msg: msg}
 }

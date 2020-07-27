@@ -21,3 +21,9 @@ func (s service) GetPlayerById(id int) (*model.Player, error) {
 	}
 	return p, nil
 }
+
+func (s service) DeletePlayer(id int) (*model.Player, error) {
+	p, err := s.GetPlayerById(id)
+	s.playerRepository.Remove(p)
+	return p, err
+}
