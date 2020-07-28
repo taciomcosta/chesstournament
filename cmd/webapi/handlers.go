@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/taciomcosta/chesstournament/internal/model"
+	"github.com/taciomcosta/chesstournament/internal/shared"
 )
 
 func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
@@ -33,8 +34,8 @@ func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	respond(w, c)
 }
 
-func readChessclubFromBody(r *http.Request) *model.ChessClub {
-	c := new(model.ChessClub)
+func readChessclubFromBody(r *http.Request) *model.Club {
+	c := new(model.Club)
 	unmarshalJsonBody(r, c)
 	return c
 }
@@ -73,17 +74,17 @@ func DeleteChessclubHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreatePlayerHandler(w http.ResponseWriter, r *http.Request) {
-	p := readPlayerFromBody(r)
-	_, err := service.CreatePlayer(p)
+	dto := readCreatePlayerDTO(r)
+	_, err := service.CreatePlayer(dto)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
-	respond(w, p)
+	respond(w, dto)
 }
 
-func readPlayerFromBody(r *http.Request) *model.Player {
-	p := new(model.Player)
+func readCreatePlayerDTO(r *http.Request) *shared.CreatePlayerDTO {
+	p := new(shared.CreatePlayerDTO)
 	unmarshalJsonBody(r, p)
 	return p
 }

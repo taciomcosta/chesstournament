@@ -1,16 +1,16 @@
 package model
 
-type ChessClub struct {
+type Club struct {
 	Id      int    `json:"id" pg:",pk"`
 	Name    string `validate:"required" json:"name"`
 	Address string `validate:"required" json:"address"`
 }
 
 type ChessClubRepository interface {
-	GetById(int) (*ChessClub, error)
-	Add(*ChessClub) (*ChessClub, error)
-	ListClubs(Filter) ([]ChessClub, error)
-	Remove(*ChessClub) error
+	GetById(int) (*Club, error)
+	Add(*Club) (*Club, error)
+	ListClubs(Filter) ([]Club, error)
+	Remove(*Club) error
 }
 
 type Repository interface {

@@ -62,25 +62,25 @@ func TestDeleteUnexistentClub(t *testing.T) {
 func TestEditChessclub(t *testing.T) {
 	tests := []struct {
 		id          int
-		c           *model.ChessClub
+		c           *model.Club
 		expectsErr  bool
 		description string
 	}{
 		{
 			id:          1,
-			c:           &model.ChessClub{Name: "name", Address: "address"},
+			c:           &model.Club{Name: "name", Address: "address"},
 			expectsErr:  false,
 			description: "should edit chess club without errors",
 		},
 		{
 			id:          -1,
-			c:           &model.ChessClub{Name: "name", Address: "address"},
+			c:           &model.Club{Name: "name", Address: "address"},
 			expectsErr:  true,
 			description: "should not edit non-existing chessclub",
 		},
 		{
 			id:          1,
-			c:           &model.ChessClub{},
+			c:           &model.Club{},
 			expectsErr:  true,
 			description: "should not edit club with invalid/empty paramters",
 		},

@@ -8,44 +8,6 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
-func TestCreatePlayer(t *testing.T) {
-	tests := []struct {
-		p             *model.Player
-		expectsErr    bool
-		expectsPlayer bool
-		description   string
-	}{
-		{
-			p:             &data.MockValidPlayer,
-			expectsErr:    false,
-			expectsPlayer: true,
-			description:   "should create player",
-		},
-		{
-			p:             &data.MockInvalidPlayer,
-			expectsErr:    true,
-			expectsPlayer: false,
-			description:   "should not create invalid player",
-		},
-		{
-			p:             &data.MockNoClubPlayer,
-			expectsErr:    true,
-			expectsPlayer: false,
-			description:   "should not create player for non-existing club",
-		},
-	}
-
-	for _, tt := range tests {
-		p, err := s.CreatePlayer(tt.p)
-		if tt.expectsPlayer && p == nil {
-			t.Error("expects player")
-		}
-		if tt.expectsErr && err == nil {
-			t.Error(tt.description)
-		}
-	}
-}
-
 func TestGetPlayerById(t *testing.T) {
 	f := func(id int) (interface{}, error) { return s.GetPlayerById(id) }
 	testGetById(f, t)
@@ -105,8 +67,32 @@ func thenAssertErrorIs(t *testing.T, err error, expectedErr error) {
 	}
 }
 
+func thenAssertValueIsNotNil(t *testing.T, err error) {
+	if err == nil {
+		t.Errorf("want error, got %v", nil)
+	}
+}
+
 func TestDeleteUnexistentPlayer(t *testing.T) {
 	player, err := s.DeletePlayer(-1)
 	thenAssertErrorIs(t, err, model.UnexistingError)
 	thenAssertValueIsNil(t, player)
+}
+
+func TestCreatePlayer(t *testing.T) {
+	response, err := s.CreatePlayer(&MockCreatePlayerDTO)
+	thenAssertValueIs(t, *response, MockCreatePlayerDTOWitId)
+	thenAssertErrorIsNil(t, err)
+}
+
+func TestCreateInvalidPlayer(t *testing.T) {
+	response, err := s.CreatePlayer(&MockCreatePlayerDTOInvalid)
+	thenAssertValueIsNil(t, response)
+	thenAssertValueIsNotNil(t, err)
+}
+
+func TestCreatePlayerInvalidClub(t *testing.T) {
+	response, err := s.CreatePlayer(&MockCreatePlayerDTOInvalidClub)
+	thenAssertValueIsNil(t, response)
+	thenAssertValueIsNotNil(t, err)
 }

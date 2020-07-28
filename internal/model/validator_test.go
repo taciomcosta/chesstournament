@@ -8,10 +8,10 @@ import (
 func TestValidate(t *testing.T) {
 	tests := []struct {
 		want error
-		c    ChessClub
+		c    Club
 	}{
-		{errors.New("Invalid fields: Name,Address"), ChessClub{}},
-		{nil, ChessClub{Name: "name", Address: "address"}},
+		{errors.New("Invalid fields: Name,Address"), Club{}},
+		{nil, Club{Name: "name", Address: "address"}},
 	}
 
 	for _, tt := range tests {

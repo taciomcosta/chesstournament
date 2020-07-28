@@ -4,18 +4,18 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
-func (s service) GetClubById(id int) (*model.ChessClub, error) {
+func (s service) GetClubById(id int) (*model.Club, error) {
 	return s.chessclubRepository.GetById(id)
 }
 
-func (s service) CreateChessclub(c *model.ChessClub) (*model.ChessClub, error) {
+func (s service) CreateChessclub(c *model.Club) (*model.Club, error) {
 	if err := model.Validate(c); err != nil {
 		return nil, err
 	}
 	return s.chessclubRepository.Add(c)
 }
 
-func (s service) EditChessclub(id int, c *model.ChessClub) error {
+func (s service) EditChessclub(id int, c *model.Club) error {
 	if _, err := s.GetClubById(id); err != nil {
 		return err
 	}
@@ -24,7 +24,7 @@ func (s service) EditChessclub(id int, c *model.ChessClub) error {
 	return err
 }
 
-func (s service) ListClubs(r model.Filter) ([]model.ChessClub, error) {
+func (s service) ListClubs(r model.Filter) ([]model.Club, error) {
 	cs, err := s.chessclubRepository.ListClubs(r)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (s service) ListClubs(r model.Filter) ([]model.ChessClub, error) {
 	return cs, nil
 }
 
-func (s service) DeleteClub(id int) (*model.ChessClub, error) {
+func (s service) DeleteClub(id int) (*model.Club, error) {
 	c, err := s.GetClubById(id)
 	s.chessclubRepository.Remove(c)
 	return c, err

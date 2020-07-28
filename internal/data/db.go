@@ -38,11 +38,13 @@ func connect() *pg.DB {
 
 func createSchema(db *pg.DB) error {
 	models := []interface{}{
-		(*model.ChessClub)(nil),
+		(*model.Club)(nil),
 		(*model.Player)(nil),
 	}
 	for _, model := range models {
-		db.CreateTable(model, &orm.CreateTableOptions{})
+		db.CreateTable(model, &orm.CreateTableOptions{
+			FKConstraints: true,
+		})
 	}
 	return nil
 }

@@ -6,19 +6,19 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
-var MockValidChessClub model.ChessClub = model.ChessClub{
+var MockValidChessClub model.Club = model.Club{
 	Id:      1,
 	Name:    "QueenClub",
 	Address: "Neverland",
 }
 
-var MockInvalidChessClub model.ChessClub
+var MockInvalidChessClub model.Club
 
-var mockClubs []model.ChessClub = []model.ChessClub{MockValidChessClub}
+var mockClubs []model.Club = []model.Club{MockValidChessClub}
 
 type MockChessClubRepository struct{}
 
-func (r *MockChessClubRepository) GetById(id int) (*model.ChessClub, error) {
+func (r *MockChessClubRepository) GetById(id int) (*model.Club, error) {
 	for _, club := range mockClubs {
 		if club.Id == id {
 			return &club, nil
@@ -27,18 +27,18 @@ func (r *MockChessClubRepository) GetById(id int) (*model.ChessClub, error) {
 	return nil, model.UnexistingError
 }
 
-func (r *MockChessClubRepository) ListClubs(f model.Filter) ([]model.ChessClub, error) {
+func (r *MockChessClubRepository) ListClubs(f model.Filter) ([]model.Club, error) {
 	if f.OrderBy == "invalid" {
-		return []model.ChessClub{}, errors.New("invalid query")
+		return []model.Club{}, errors.New("invalid query")
 
 	}
 	return mockClubs, nil
 }
 
-func (r *MockChessClubRepository) Add(c *model.ChessClub) (*model.ChessClub, error) {
+func (r *MockChessClubRepository) Add(c *model.Club) (*model.Club, error) {
 	return c, nil
 }
 
-func (r *MockChessClubRepository) Remove(c *model.ChessClub) error {
+func (r *MockChessClubRepository) Remove(c *model.Club) error {
 	return nil
 }

@@ -97,7 +97,7 @@ var handlerTests []handlerTest = []handlerTest{
 	},
 	{
 		description:    "should handle creation of Player",
-		request:        newRequestBuilder().withBody(toJSONString(data.MockValidPlayer)).build(),
+		request:        newRequestBuilder().withBody(toJSONString(shared.MockCreatePlayerDTO)).build(),
 		handle:         CreatePlayerHandler,
 		expectedStatus: http.StatusCreated,
 	},

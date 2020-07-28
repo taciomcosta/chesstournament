@@ -4,7 +4,6 @@ import "github.com/taciomcosta/chesstournament/internal/model"
 
 var MockValidPlayer model.Player = model.Player{
 	Id:        1,
-	ClubId:    1,
 	Ranking:   model.RankingMaster,
 	FirstName: "Magnus",
 	LastName:  "Carlsen",
@@ -15,7 +14,6 @@ var MockValidPlayer model.Player = model.Player{
 
 var MockNoClubPlayer model.Player = model.Player{
 	Id:        2,
-	ClubId:    2,
 	Ranking:   model.RankingMaster,
 	FirstName: "No",
 	LastName:  "Club",
@@ -34,6 +32,7 @@ func (r MockPlayerRepository) Add(p *model.Player) (*model.Player, error) {
 	if p.FirstName == "invalid" {
 		return nil, model.UnknownError
 	}
+	p.Id = 1
 	return p, nil
 }
 
