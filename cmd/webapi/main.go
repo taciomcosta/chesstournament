@@ -10,7 +10,7 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/shared"
 )
 
-var service shared.Service = shared.NewService(data.Repository{}, data.ChessClubRepository{}, data.PlayerRepository{})
+var service shared.Service = shared.NewService(data.Repository{}, data.ClubRepository{}, data.PlayerRepository{})
 var swaggerURLPath = "/swagger"
 var router *mux.Router = mux.NewRouter().PathPrefix("/v1").Subrouter()
 
@@ -27,11 +27,11 @@ func addSwagger(router *mux.Router) {
 }
 
 func addHandlers(router *mux.Router) {
-	router.HandleFunc("/chessclubs/{id}", GetChessclubDetailsHandler).Methods("GET")
-	router.HandleFunc("/chessclubs", ListChessclubsHandler).Methods("GET")
-	router.HandleFunc("/chessclubs", CreateChessclubHandler).Methods("POST")
-	router.HandleFunc("/chessclubs/{id}", DeleteChessclubHandler).Methods("DELETE")
-	router.HandleFunc("/chessclubs/{id}", EditChessclubHandler).Methods("PUT")
+	router.HandleFunc("/chessclubs/{id}", GetClubDetailsHandler).Methods("GET")
+	router.HandleFunc("/chessclubs", ListClubsHandler).Methods("GET")
+	router.HandleFunc("/chessclubs", CreateClubHandler).Methods("POST")
+	router.HandleFunc("/chessclubs/{id}", DeleteClubHandler).Methods("DELETE")
+	router.HandleFunc("/chessclubs/{id}", EditClubHandler).Methods("PUT")
 	router.HandleFunc("/players/{id}", GetPlayerDetailsHandler).Methods("GET")
 	router.HandleFunc("/players", CreatePlayerHandler).Methods("POST")
 	router.HandleFunc("/players/{id}", DeletePlayerHandler).Methods("DELETE")

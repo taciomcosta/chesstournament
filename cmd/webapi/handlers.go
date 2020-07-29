@@ -9,7 +9,7 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/shared"
 )
 
-func GetChessclubDetailsHandler(w http.ResponseWriter, r *http.Request) {
+func GetClubDetailsHandler(w http.ResponseWriter, r *http.Request) {
 	f := func(id int) (interface{}, error) { return service.GetClubById(id) }
 	getDetails(w, r, f)
 }
@@ -24,9 +24,9 @@ func getDetails(w http.ResponseWriter, r *http.Request, get getDetailsFunc) {
 	respond(w, v)
 }
 
-func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
-	c := readChessclubFromBody(r)
-	_, err := service.CreateChessclub(c)
+func CreateClubHandler(w http.ResponseWriter, r *http.Request) {
+	c := readClubFromBody(r)
+	_, err := service.CreateClub(c)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
@@ -34,7 +34,7 @@ func CreateChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	respond(w, c)
 }
 
-func readChessclubFromBody(r *http.Request) *model.Club {
+func readClubFromBody(r *http.Request) *model.Club {
 	c := new(model.Club)
 	unmarshalJsonBody(r, c)
 	return c
@@ -46,9 +46,9 @@ func unmarshalJsonBody(r *http.Request, v interface{}) {
 	json.Unmarshal(b, v)
 }
 
-func EditChessclubHandler(w http.ResponseWriter, r *http.Request) {
-	c := readChessclubFromBody(r)
-	err := service.EditChessclub(getIdFromRequest(r), c)
+func EditClubHandler(w http.ResponseWriter, r *http.Request) {
+	c := readClubFromBody(r)
+	err := service.EditClub(getIdFromRequest(r), c)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
@@ -56,7 +56,7 @@ func EditChessclubHandler(w http.ResponseWriter, r *http.Request) {
 	respond(w, c)
 }
 
-func ListChessclubsHandler(w http.ResponseWriter, r *http.Request) {
+func ListClubsHandler(w http.ResponseWriter, r *http.Request) {
 	f := newFilter(r)
 	cs, err := service.ListClubs(f)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
@@ -65,7 +65,7 @@ func ListChessclubsHandler(w http.ResponseWriter, r *http.Request) {
 	respond(w, cs)
 }
 
-func DeleteChessclubHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteClubHandler(w http.ResponseWriter, r *http.Request) {
 	c, err := service.DeleteClub(getIdFromRequest(r))
 	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
 		return

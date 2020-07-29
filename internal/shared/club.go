@@ -8,19 +8,19 @@ func (s service) GetClubById(id int) (*model.Club, error) {
 	return s.chessclubRepository.GetById(id)
 }
 
-func (s service) CreateChessclub(c *model.Club) (*model.Club, error) {
+func (s service) CreateClub(c *model.Club) (*model.Club, error) {
 	if err := model.Validate(c); err != nil {
 		return nil, err
 	}
 	return s.chessclubRepository.Add(c)
 }
 
-func (s service) EditChessclub(id int, c *model.Club) error {
+func (s service) EditClub(id int, c *model.Club) error {
 	if _, err := s.GetClubById(id); err != nil {
 		return err
 	}
 	c.Id = id
-	_, err := s.CreateChessclub(c)
+	_, err := s.CreateClub(c)
 	return err
 }
 

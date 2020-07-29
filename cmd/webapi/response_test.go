@@ -84,7 +84,7 @@ func testDontRespondWithError(t *testing.T) {
 
 func TestToJsonString(t *testing.T) {
 	want := `{"id":1,"name":"QueenClub","address":"Neverland"}`
-	got := toJSONString(data.MockValidChessClub)
+	got := toJSONString(data.MockValidClub)
 	if got != want {
 		t.Errorf("want %s, got %s", want, got)
 	}

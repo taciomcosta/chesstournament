@@ -12,14 +12,14 @@ func TestGetClubById(t *testing.T) {
 	testGetById(f, t)
 }
 
-func TestCreateChessclub2(t *testing.T) {
-	club, err := s.CreateChessclub(&data.MockValidChessClub)
-	thenAssertValueIs(t, *club, data.MockValidChessClub)
+func TestCreateClub(t *testing.T) {
+	club, err := s.CreateClub(&data.MockValidClub)
+	thenAssertValueIs(t, *club, data.MockValidClub)
 	thenAssertErrorIsNil(t, err)
 }
 
-func TestCreateInvalidChessclub(t *testing.T) {
-	club, err := s.CreateChessclub(&data.MockInvalidChessClub)
+func TestCreateInvalidClub(t *testing.T) {
+	club, err := s.CreateClub(&data.MockInvalidClub)
 	thenAssertValueIsNil(t, club)
 	thenAssertErrorIs(t, err, model.InvalidModelError{Msg: "Invalid fields: Name,Address"})
 }
@@ -49,7 +49,7 @@ func TestListClubs(t *testing.T) {
 
 func TestDeleteClub(t *testing.T) {
 	club, err := s.DeleteClub(1)
-	thenAssertValueIs(t, *club, data.MockValidChessClub)
+	thenAssertValueIs(t, *club, data.MockValidClub)
 	thenAssertErrorIsNil(t, err)
 }
 
@@ -59,7 +59,7 @@ func TestDeleteUnexistentClub(t *testing.T) {
 	thenAssertErrorIs(t, err, model.UnexistingError)
 }
 
-func TestEditChessclub(t *testing.T) {
+func TestEditClub(t *testing.T) {
 	tests := []struct {
 		id          int
 		c           *model.Club
@@ -87,7 +87,7 @@ func TestEditChessclub(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		err := s.EditChessclub(tt.id, tt.c)
+		err := s.EditClub(tt.id, tt.c)
 
 		if tt.expectsErr && err == nil {
 			t.Error(tt.description)

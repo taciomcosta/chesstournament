@@ -6,7 +6,7 @@ type Club struct {
 	Address string `validate:"required" json:"address"`
 }
 
-type ChessClubRepository interface {
+type ClubRepository interface {
 	GetById(int) (*Club, error)
 	Add(*Club) (*Club, error)
 	ListClubs(Filter) ([]Club, error)

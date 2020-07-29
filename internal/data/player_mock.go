@@ -29,9 +29,6 @@ var mockPlayers []model.Player = []model.Player{MockValidPlayer}
 type MockPlayerRepository struct{}
 
 func (r MockPlayerRepository) Add(p *model.Player) (*model.Player, error) {
-	if p.FirstName == "invalid" {
-		return nil, model.UnknownError
-	}
 	p.Id = 1
 	return p, nil
 }

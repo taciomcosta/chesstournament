@@ -4,9 +4,9 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
-type ChessClubRepository struct{}
+type ClubRepository struct{}
 
-func (r ChessClubRepository) GetById(id int) (*model.Club, error) {
+func (r ClubRepository) GetById(id int) (*model.Club, error) {
 	club := &model.Club{Id: id}
 	if err := db.Select(club); err != nil {
 		return nil, err
@@ -14,7 +14,7 @@ func (r ChessClubRepository) GetById(id int) (*model.Club, error) {
 	return club, nil
 }
 
-func (r ChessClubRepository) Add(c *model.Club) (*model.Club, error) {
+func (r ClubRepository) Add(c *model.Club) (*model.Club, error) {
 	_, err := db.Model(c).OnConflict("(id) DO UPDATE").Insert()
 	if err != nil {
 		return nil, model.UnknownError
@@ -22,7 +22,7 @@ func (r ChessClubRepository) Add(c *model.Club) (*model.Club, error) {
 	return c, nil
 }
 
-func (r ChessClubRepository) ListClubs(lr model.Filter) ([]model.Club, error) {
+func (r ClubRepository) ListClubs(lr model.Filter) ([]model.Club, error) {
 	cs := make([]model.Club, 0)
 	if err := lr.Validate(); err != nil {
 		return cs, err
@@ -31,6 +31,6 @@ func (r ChessClubRepository) ListClubs(lr model.Filter) ([]model.Club, error) {
 	return cs, err
 }
 
-func (r ChessClubRepository) Remove(c *model.Club) error {
+func (r ClubRepository) Remove(c *model.Club) error {
 	return db.Delete(c)
 }

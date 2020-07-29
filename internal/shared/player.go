@@ -30,12 +30,11 @@ type CreatePlayerDTO struct {
 }
 
 func (s service) CreatePlayer(playerDTO *CreatePlayerDTO) (*CreatePlayerDTO, error) {
-	club, err := s.chessclubRepository.GetById(playerDTO.ClubId)
-	if err != nil {
+	if !s.clubExists(playerDTO.ClubId) {
 		return nil, model.UnexistingError
 	}
 
-	player, err := newPlayer(playerDTO, club)
+	player, err := newPlayer(playerDTO)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +45,14 @@ func (s service) CreatePlayer(playerDTO *CreatePlayerDTO) (*CreatePlayerDTO, err
 	return playerDTO, nil
 }
 
-func newPlayer(dto *CreatePlayerDTO, club *model.Club) (*model.Player, error) {
+func (s service) clubExists(clubId int) bool {
+	if _, err := s.chessclubRepository.GetById(clubId); err != nil {
+		return false
+	}
+	return true
+}
+
+func newPlayer(dto *CreatePlayerDTO) (*model.Player, error) {
 	player := new(model.Player)
 	player.Ranking = model.Ranking(dto.Ranking)
 	player.FirstName = dto.FirstName
@@ -54,6 +60,6 @@ func newPlayer(dto *CreatePlayerDTO, club *model.Club) (*model.Player, error) {
 	player.Address = dto.Address
 	player.Phone = dto.Phone
 	player.Email = dto.Email
-	player.ClubId = club.Id
+	player.ClubId = dto.ClubId
 	return player, model.Validate(player)
 }
