@@ -12,7 +12,3 @@ type ClubRepository interface {
 	ListClubs(Filter) ([]Club, error)
 	Remove(*Club) error
 }
-
-type Repository interface {
-	FindOne(v interface{}) (interface{}, error)
-}

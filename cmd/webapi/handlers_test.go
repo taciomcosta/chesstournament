@@ -11,7 +11,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	service = shared.NewService(&data.MockRepository{}, &data.MockClubRepository{}, data.MockPlayerRepository{})
+	service = shared.NewService(&data.MockClubRepository{}, data.MockPlayerRepository{})
 	os.Exit(m.Run())
 }
 

@@ -15,14 +15,11 @@ type Service interface {
 	DeletePlayer(id int) (*model.Player, error)
 }
 
-func NewService(
-	repository model.Repository, chessclub model.ClubRepository, player model.PlayerRepository,
-) Service {
-	return service{repository, chessclub, player}
+func NewService(club model.ClubRepository, player model.PlayerRepository) Service {
+	return service{club, player}
 }
 
 type service struct {
-	repository          model.Repository
 	chessclubRepository model.ClubRepository
 	playerRepository    model.PlayerRepository
 }
