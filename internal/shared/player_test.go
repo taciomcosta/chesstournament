@@ -9,38 +9,45 @@ import (
 )
 
 func TestGetPlayerById(t *testing.T) {
-	f := func(id int) (interface{}, error) { return s.GetPlayerById(id) }
-	testGetById(f, t)
+	player, err := s.GetPlayerById(1)
+	thenAssertValueIsNotNil(t, player)
+	thenAssertErrorIsNil(t, err)
 }
 
-type getFunc func(int) (interface{}, error)
-
-func testGetById(get getFunc, t *testing.T) {
-	var tests = []struct {
-		id            int
-		expectsPlayer bool
-		expectsErr    bool
-	}{
-		{1, true, false},
-		{-1, false, true},
-	}
-
-	for _, tt := range tests {
-		c, err := get(tt.id)
-		if tt.expectsPlayer && c == nil {
-			t.Error("it should return a Player")
-		}
-		if tt.expectsErr && err == nil {
-			t.Error("it should return an error")
-		}
-	}
-
+func TestGetPlayerUnexistent(t *testing.T) {
+	player, err := s.GetPlayerById(-1)
+	thenAssertValueIsNil(t, player)
+	thenAssertValueIsNotNil(t, err)
 }
 
 func TestDeletePlayer(t *testing.T) {
 	player, err := s.DeletePlayer(data.MockValidPlayer.Id)
 	thenAssertErrorIsNil(t, err)
 	thenAssertValueIs(t, *player, data.MockValidPlayer)
+}
+
+func TestDeleteUnexistentPlayer(t *testing.T) {
+	player, err := s.DeletePlayer(-1)
+	thenAssertErrorIs(t, err, model.UnexistingError)
+	thenAssertValueIsNil(t, player)
+}
+
+func TestCreatePlayer(t *testing.T) {
+	response, err := s.CreatePlayer(&MockCreatePlayerDTO)
+	thenAssertValueIs(t, *response, MockCreatePlayerDTOWitId)
+	thenAssertErrorIsNil(t, err)
+}
+
+func TestCreateInvalidPlayer(t *testing.T) {
+	response, err := s.CreatePlayer(&MockCreatePlayerDTOInvalid)
+	thenAssertValueIsNil(t, response)
+	thenAssertValueIsNotNil(t, err)
+}
+
+func TestCreatePlayerInvalidClub(t *testing.T) {
+	response, err := s.CreatePlayer(&MockCreatePlayerDTOInvalidClub)
+	thenAssertValueIsNil(t, response)
+	thenAssertValueIsNotNil(t, err)
 }
 
 func thenAssertValueIsNil(t *testing.T, value interface{}) {
@@ -67,32 +74,15 @@ func thenAssertErrorIs(t *testing.T, err error, expectedErr error) {
 	}
 }
 
-func thenAssertValueIsNotNil(t *testing.T, err error) {
-	if err == nil {
+func thenAssertValueIsNotNil(t *testing.T, v interface{}) {
+	if v == nil {
 		t.Errorf("want error, got %v", nil)
 	}
 }
 
-func TestDeleteUnexistentPlayer(t *testing.T) {
-	player, err := s.DeletePlayer(-1)
-	thenAssertErrorIs(t, err, model.UnexistingError)
-	thenAssertValueIsNil(t, player)
-}
-
-func TestCreatePlayer(t *testing.T) {
-	response, err := s.CreatePlayer(&MockCreatePlayerDTO)
-	thenAssertValueIs(t, *response, MockCreatePlayerDTOWitId)
-	thenAssertErrorIsNil(t, err)
-}
-
-func TestCreateInvalidPlayer(t *testing.T) {
-	response, err := s.CreatePlayer(&MockCreatePlayerDTOInvalid)
-	thenAssertValueIsNil(t, response)
-	thenAssertValueIsNotNil(t, err)
-}
-
-func TestCreatePlayerInvalidClub(t *testing.T) {
-	response, err := s.CreatePlayer(&MockCreatePlayerDTOInvalidClub)
-	thenAssertValueIsNil(t, response)
-	thenAssertValueIsNotNil(t, err)
+func thenAssertSliceLenIs(t *testing.T, values interface{}, len int) {
+	slice := reflect.ValueOf(values)
+	if slice.Len() != len {
+		t.Errorf("want slice length %d, got %d", len, slice.Len())
+	}
 }

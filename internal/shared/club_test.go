@@ -8,8 +8,15 @@ import (
 )
 
 func TestGetClubById(t *testing.T) {
-	f := func(id int) (interface{}, error) { return s.GetClubById(id) }
-	testGetById(f, t)
+	club, err := s.GetClubById(1)
+	thenAssertValueIsNotNil(t, club)
+	thenAssertErrorIsNil(t, err)
+}
+
+func TestGetClubUnexistent(t *testing.T) {
+	club, err := s.GetClubById(-1)
+	thenAssertValueIsNil(t, club)
+	thenAssertValueIsNotNil(t, err)
 }
 
 func TestCreateClub(t *testing.T) {
@@ -24,27 +31,16 @@ func TestCreateInvalidClub(t *testing.T) {
 	thenAssertErrorIs(t, err, model.InvalidModelError{Msg: "Invalid fields: Name,Address"})
 }
 
-func TestListClubs(t *testing.T) {
-	tests := []struct {
-		r            model.Filter
-		expectsClubs bool
-		expectsErr   bool
-	}{
-		{model.Filter{}, true, false},
-		{model.Filter{OrderBy: "invalid"}, false, true},
-	}
+func TestListClubsValidFilters(t *testing.T) {
+	clubs, err := s.ListClubs(model.Filter{})
+	thenAssertSliceLenIs(t, clubs, 1)
+	thenAssertErrorIsNil(t, err)
+}
 
-	for _, tt := range tests {
-		cs, err := s.ListClubs(tt.r)
-
-		if tt.expectsClubs && len(cs) == 0 {
-			t.Error("it should list Chess Clubs")
-		}
-
-		if tt.expectsErr && err == nil {
-			t.Error("it should return an error")
-		}
-	}
+func TestClubsInvalidFilters(t *testing.T) {
+	clubs, err := s.ListClubs(model.Filter{OrderBy: "invalid"})
+	thenAssertSliceLenIs(t, clubs, 0)
+	thenAssertValueIsNotNil(t, err)
 }
 
 func TestDeleteClub(t *testing.T) {
@@ -62,32 +58,32 @@ func TestDeleteUnexistentClub(t *testing.T) {
 func TestEditClub(t *testing.T) {
 	tests := []struct {
 		id          int
-		c           *model.Club
+		club        *model.Club
 		expectsErr  bool
 		description string
 	}{
 		{
 			id:          1,
-			c:           &model.Club{Name: "name", Address: "address"},
+			club:        &model.Club{Name: "name", Address: "address"},
 			expectsErr:  false,
 			description: "should edit chess club without errors",
 		},
 		{
 			id:          -1,
-			c:           &model.Club{Name: "name", Address: "address"},
+			club:        &model.Club{Name: "name", Address: "address"},
 			expectsErr:  true,
 			description: "should not edit non-existing chessclub",
 		},
 		{
 			id:          1,
-			c:           &model.Club{},
+			club:        &model.Club{},
 			expectsErr:  true,
 			description: "should not edit club with invalid/empty paramters",
 		},
 	}
 
 	for _, tt := range tests {
-		err := s.EditClub(tt.id, tt.c)
+		err := s.EditClub(tt.id, tt.club)
 
 		if tt.expectsErr && err == nil {
 			t.Error(tt.description)
