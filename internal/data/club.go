@@ -11,7 +11,7 @@ type ClubRepository struct{}
 func (r ClubRepository) GetById(id int) (*model.Club, error) {
 	club := &model.Club{Id: id}
 	err := db.Select(club)
-	if isNotFoundError(err) {
+	if isRecordNotFoundError(err) {
 		return nil, errors.New("Club not found")
 	}
 	if err != nil {

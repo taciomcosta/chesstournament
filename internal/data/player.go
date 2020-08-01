@@ -20,7 +20,7 @@ func (r PlayerRepository) Add(p *model.Player) (*model.Player, error) {
 
 func (r PlayerRepository) FindOne(criteria *model.Player) (*model.Player, error) {
 	err := db.Select(criteria)
-	if isNotFoundError(err) {
+	if isRecordNotFoundError(err) {
 		return nil, errors.New("Player not found")
 	}
 	if err != nil {
@@ -29,7 +29,7 @@ func (r PlayerRepository) FindOne(criteria *model.Player) (*model.Player, error)
 	return criteria, nil
 }
 
-func isNotFoundError(err error) bool {
+func isRecordNotFoundError(err error) bool {
 	return err != nil && err.Error() == "pg: no rows in result set"
 }
 

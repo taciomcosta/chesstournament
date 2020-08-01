@@ -12,13 +12,12 @@ import (
 	"strconv"
 )
 
-func TestId(t *testing.T) {
+func TestGetIdFromRequest(t *testing.T) {
 	want := 5
-	w, _ := http.NewRequest("GET", "/", nil)
-	w = mux.SetURLVars(w, map[string]string{"id": strconv.Itoa(want)})
-	got := getIdFromRequest(w)
+	request := newRequestBuilder().withPathVar("id", strconv.Itoa(want)).build()
+	got := getIdFromRequest(request)
 	if got != want {
-		t.Errorf("want %d, got %d", want, got)
+		t.Errorf("should get id from request")
 	}
 }
 
