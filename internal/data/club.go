@@ -1,6 +1,8 @@
 package data
 
 import (
+	"errors"
+
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
@@ -8,8 +10,12 @@ type ClubRepository struct{}
 
 func (r ClubRepository) GetById(id int) (*model.Club, error) {
 	club := &model.Club{Id: id}
-	if err := db.Select(club); err != nil {
-		return nil, err
+	err := db.Select(club)
+	if isNotFoundError(err) {
+		return nil, errors.New("Club not found")
+	}
+	if err != nil {
+		return nil, model.UnknownError
 	}
 	return club, nil
 }

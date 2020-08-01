@@ -30,7 +30,7 @@ func (r *MockClubRepository) GetById(id int) (*model.Club, error) {
 			return &club, nil
 		}
 	}
-	return nil, model.UnexistingError
+	return nil, errors.New("Mock club does not exist")
 }
 
 func (r *MockClubRepository) ListClubs(f model.Filter) ([]model.Club, error) {

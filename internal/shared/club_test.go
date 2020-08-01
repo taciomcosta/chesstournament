@@ -52,7 +52,7 @@ func TestDeleteClub(t *testing.T) {
 func TestDeleteUnexistentClub(t *testing.T) {
 	club, err := s.DeleteClub(-1)
 	thenAssertValueIsNil(t, club)
-	thenAssertErrorIs(t, err, model.UnexistingError)
+	thenAssertValueIsNotNil(t, err)
 }
 
 func TestDeleteClubWithPlayers(t *testing.T) {

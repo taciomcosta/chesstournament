@@ -1,6 +1,10 @@
 package data
 
-import "github.com/taciomcosta/chesstournament/internal/model"
+import (
+	"errors"
+
+	"github.com/taciomcosta/chesstournament/internal/model"
+)
 
 var MockValidPlayer model.Player = model.Player{
 	Id:        1,
@@ -40,7 +44,7 @@ func (r MockPlayerRepository) FindOne(criteria *model.Player) (*model.Player, er
 			return &p, nil
 		}
 	}
-	return nil, model.UnexistingError
+	return nil, errors.New("Mock player does not exist")
 }
 
 func (r MockPlayerRepository) Remove(p *model.Player) error {

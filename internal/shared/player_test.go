@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/taciomcosta/chesstournament/internal/data"
-	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
 func TestGetPlayerById(t *testing.T) {
@@ -28,7 +27,7 @@ func TestDeletePlayer(t *testing.T) {
 
 func TestDeleteUnexistentPlayer(t *testing.T) {
 	player, err := s.DeletePlayer(-1)
-	thenAssertErrorIs(t, err, model.UnexistingError)
+	thenAssertValueIsNotNil(t, err)
 	thenAssertValueIsNil(t, player)
 }
 

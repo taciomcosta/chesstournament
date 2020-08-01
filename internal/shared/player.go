@@ -1,13 +1,15 @@
 package shared
 
 import (
+	"errors"
+
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
 func (s service) GetPlayerById(id int) (*model.Player, error) {
 	p, err := s.playerRepository.FindOne(&model.Player{Id: id})
 	if err != nil {
-		return nil, model.UnexistingError
+		return nil, err
 	}
 	return p, nil
 }
@@ -31,7 +33,7 @@ type CreatePlayerDTO struct {
 
 func (s service) CreatePlayer(playerDTO *CreatePlayerDTO) (*CreatePlayerDTO, error) {
 	if !s.clubExists(playerDTO.ClubId) {
-		return nil, model.UnexistingError
+		return nil, errors.New("Player does not exist")
 	}
 
 	player, err := newPlayer(playerDTO)
