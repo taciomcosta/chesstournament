@@ -1,6 +1,8 @@
 package shared
 
 import (
+	"errors"
+
 	"github.com/taciomcosta/chesstournament/internal/model"
 )
 
@@ -33,7 +35,18 @@ func (s service) ListClubs(r model.Filter) ([]model.Club, error) {
 }
 
 func (s service) DeleteClub(id int) (*model.Club, error) {
-	c, err := s.GetClubById(id)
-	s.chessclubRepository.Remove(c)
-	return c, err
+	club, err := s.GetClubById(id)
+	if err != nil {
+		return nil, err
+	}
+	if s.hasAssociatedPlayers(club) {
+		return nil, errors.New("Cannot delete club with associated players")
+	}
+	s.chessclubRepository.Remove(club)
+	return club, err
+}
+
+func (s service) hasAssociatedPlayers(club *model.Club) bool {
+	playersCount := s.playerRepository.Count(&model.Player{ClubId: club.Id})
+	return playersCount > 0
 }

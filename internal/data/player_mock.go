@@ -46,3 +46,10 @@ func (r MockPlayerRepository) FindOne(criteria *model.Player) (*model.Player, er
 func (r MockPlayerRepository) Remove(p *model.Player) error {
 	return nil
 }
+
+func (r MockPlayerRepository) Count(criteria *model.Player) int {
+	if criteria.ClubId == MockValidClubWithPlayer.Id {
+		return 1
+	}
+	return 0
+}

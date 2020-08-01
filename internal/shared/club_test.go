@@ -28,12 +28,12 @@ func TestCreateClub(t *testing.T) {
 func TestCreateInvalidClub(t *testing.T) {
 	club, err := s.CreateClub(&data.MockInvalidClub)
 	thenAssertValueIsNil(t, club)
-	thenAssertErrorIs(t, err, model.InvalidModelError{Msg: "Invalid fields: Name,Address"})
+	thenAssertValueIsNotNil(t, err)
 }
 
 func TestListClubsValidFilters(t *testing.T) {
 	clubs, err := s.ListClubs(model.Filter{})
-	thenAssertSliceLenIs(t, clubs, 1)
+	thenAssertSliceLenIs(t, clubs, 2)
 	thenAssertErrorIsNil(t, err)
 }
 
@@ -55,38 +55,23 @@ func TestDeleteUnexistentClub(t *testing.T) {
 	thenAssertErrorIs(t, err, model.UnexistingError)
 }
 
+func TestDeleteClubWithPlayers(t *testing.T) {
+	club, err := s.DeleteClub(2)
+	thenAssertValueIsNil(t, club)
+	thenAssertValueIsNotNil(t, err)
+}
+
 func TestEditClub(t *testing.T) {
-	tests := []struct {
-		id          int
-		club        *model.Club
-		expectsErr  bool
-		description string
-	}{
-		{
-			id:          1,
-			club:        &model.Club{Name: "name", Address: "address"},
-			expectsErr:  false,
-			description: "should edit chess club without errors",
-		},
-		{
-			id:          -1,
-			club:        &model.Club{Name: "name", Address: "address"},
-			expectsErr:  true,
-			description: "should not edit non-existing chessclub",
-		},
-		{
-			id:          1,
-			club:        &model.Club{},
-			expectsErr:  true,
-			description: "should not edit club with invalid/empty paramters",
-		},
-	}
+	err := s.EditClub(1, &data.MockValidClub)
+	thenAssertErrorIsNil(t, err)
+}
 
-	for _, tt := range tests {
-		err := s.EditClub(tt.id, tt.club)
+func TestEditUnexistentClub(t *testing.T) {
+	err := s.EditClub(-1, &data.MockValidClub)
+	thenAssertValueIsNotNil(t, err)
+}
 
-		if tt.expectsErr && err == nil {
-			t.Error(tt.description)
-		}
-	}
+func TestEditClubInvalidInput(t *testing.T) {
+	err := s.EditClub(1, &data.MockInvalidClub)
+	thenAssertValueIsNotNil(t, err)
 }

@@ -12,9 +12,15 @@ var MockValidClub model.Club = model.Club{
 	Address: "Neverland",
 }
 
+var MockValidClubWithPlayer model.Club = model.Club{
+	Id:      2,
+	Name:    "Popular Club",
+	Address: "Somewhere",
+}
+
 var MockInvalidClub model.Club
 
-var mockClubs []model.Club = []model.Club{MockValidClub}
+var mockClubs []model.Club = []model.Club{MockValidClub, MockValidClubWithPlayer}
 
 type MockClubRepository struct{}
 

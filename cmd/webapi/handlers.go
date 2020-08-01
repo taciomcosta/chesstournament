@@ -10,14 +10,7 @@ import (
 )
 
 func GetClubDetailsHandler(w http.ResponseWriter, r *http.Request) {
-	f := func(id int) (interface{}, error) { return service.GetClubById(id) }
-	getDetails(w, r, f)
-}
-
-type getDetailsFunc func(id int) (interface{}, error)
-
-func getDetails(w http.ResponseWriter, r *http.Request, get getDetailsFunc) {
-	v, err := get(getIdFromRequest(r))
+	v, err := service.GetClubById(getIdFromRequest(r))
 	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
 		return
 	}
@@ -25,52 +18,52 @@ func getDetails(w http.ResponseWriter, r *http.Request, get getDetailsFunc) {
 }
 
 func CreateClubHandler(w http.ResponseWriter, r *http.Request) {
-	c := readClubFromBody(r)
-	_, err := service.CreateClub(c)
+	club := readClubFromBody(r)
+	_, err := service.CreateClub(club)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
-	respond(w, c)
+	respond(w, club)
 }
 
 func readClubFromBody(r *http.Request) *model.Club {
-	c := new(model.Club)
-	unmarshalJsonBody(r, c)
-	return c
+	club := new(model.Club)
+	unmarshalJsonBody(r, club)
+	return club
 }
 
 func unmarshalJsonBody(r *http.Request, v interface{}) {
-	b, _ := ioutil.ReadAll(r.Body)
+	buffer, _ := ioutil.ReadAll(r.Body)
 	r.Body.Close()
-	json.Unmarshal(b, v)
+	json.Unmarshal(buffer, v)
 }
 
 func EditClubHandler(w http.ResponseWriter, r *http.Request) {
-	c := readClubFromBody(r)
-	err := service.EditClub(getIdFromRequest(r), c)
+	club := readClubFromBody(r)
+	err := service.EditClub(getIdFromRequest(r), club)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	respond(w, c)
+	respond(w, club)
 }
 
 func ListClubsHandler(w http.ResponseWriter, r *http.Request) {
-	f := newFilter(r)
-	cs, err := service.ListClubs(f)
+	filter := newFilter(r)
+	clubs, err := service.ListClubs(filter)
 	if ok := tryRespondWithError(w, http.StatusBadRequest, err); ok {
 		return
 	}
-	respond(w, cs)
+	respond(w, clubs)
 }
 
 func DeleteClubHandler(w http.ResponseWriter, r *http.Request) {
-	c, err := service.DeleteClub(getIdFromRequest(r))
+	club, err := service.DeleteClub(getIdFromRequest(r))
 	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
 		return
 	}
-	respond(w, c)
+	respond(w, club)
 }
 
 func CreatePlayerHandler(w http.ResponseWriter, r *http.Request) {
@@ -84,14 +77,17 @@ func CreatePlayerHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func readCreatePlayerDTO(r *http.Request) *shared.CreatePlayerDTO {
-	p := new(shared.CreatePlayerDTO)
-	unmarshalJsonBody(r, p)
-	return p
+	player := new(shared.CreatePlayerDTO)
+	unmarshalJsonBody(r, player)
+	return player
 }
 
 func GetPlayerDetailsHandler(w http.ResponseWriter, r *http.Request) {
-	f := func(id int) (interface{}, error) { return service.GetPlayerById(id) }
-	getDetails(w, r, f)
+	player, err := service.GetPlayerById(getIdFromRequest(r))
+	if ok := tryRespondWithError(w, http.StatusNotFound, err); ok {
+		return
+	}
+	respond(w, player)
 }
 
 func DeletePlayerHandler(w http.ResponseWriter, r *http.Request) {

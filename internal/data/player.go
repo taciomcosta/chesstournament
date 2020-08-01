@@ -27,3 +27,11 @@ func (r PlayerRepository) FindOne(criteria *model.Player) (*model.Player, error)
 func (r PlayerRepository) Remove(p *model.Player) error {
 	return db.Delete(p)
 }
+
+func (r PlayerRepository) Count(criteria *model.Player) int {
+	count, err := db.Model(criteria).Count()
+	if err != nil {
+		return 0
+	}
+	return count
+}
