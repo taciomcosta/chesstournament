@@ -7,14 +7,14 @@ import (
 )
 
 func (s service) GetClubById(id int) (*model.Club, error) {
-	return s.chessclubRepository.GetById(id)
+	return s.repository.Club.GetById(id)
 }
 
 func (s service) CreateClub(c *model.Club) (*model.Club, error) {
 	if err := model.Validate(c); err != nil {
 		return nil, err
 	}
-	return s.chessclubRepository.Add(c)
+	return s.repository.Club.Add(c)
 }
 
 func (s service) EditClub(id int, c *model.Club) error {
@@ -27,7 +27,7 @@ func (s service) EditClub(id int, c *model.Club) error {
 }
 
 func (s service) ListClubs(r model.Filter) ([]model.Club, error) {
-	cs, err := s.chessclubRepository.ListClubs(r)
+	cs, err := s.repository.Club.ListClubs(r)
 	if err != nil {
 		return nil, err
 	}
@@ -42,11 +42,11 @@ func (s service) DeleteClub(id int) (*model.Club, error) {
 	if s.hasAssociatedPlayers(club) {
 		return nil, errors.New("Cannot delete club with associated players")
 	}
-	s.chessclubRepository.Remove(club)
+	s.repository.Club.Remove(club)
 	return club, err
 }
 
 func (s service) hasAssociatedPlayers(club *model.Club) bool {
-	playersCount := s.playerRepository.Count(&model.Player{ClubId: club.Id})
-	return playersCount > 0
+	criteria := &model.Player{ClubId: club.Id}
+	return s.repository.Player.Count(criteria) > 0
 }

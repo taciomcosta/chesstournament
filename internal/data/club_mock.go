@@ -24,7 +24,7 @@ var mockClubs []model.Club = []model.Club{MockValidClub, MockValidClubWithPlayer
 
 type MockClubRepository struct{}
 
-func (r *MockClubRepository) GetById(id int) (*model.Club, error) {
+func (r MockClubRepository) GetById(id int) (*model.Club, error) {
 	for _, club := range mockClubs {
 		if club.Id == id {
 			return &club, nil
@@ -33,7 +33,7 @@ func (r *MockClubRepository) GetById(id int) (*model.Club, error) {
 	return nil, errors.New("Mock club does not exist")
 }
 
-func (r *MockClubRepository) ListClubs(f model.Filter) ([]model.Club, error) {
+func (r MockClubRepository) ListClubs(f model.Filter) ([]model.Club, error) {
 	if f.OrderBy == "invalid" {
 		return []model.Club{}, errors.New("invalid query")
 
@@ -41,10 +41,10 @@ func (r *MockClubRepository) ListClubs(f model.Filter) ([]model.Club, error) {
 	return mockClubs, nil
 }
 
-func (r *MockClubRepository) Add(c *model.Club) (*model.Club, error) {
+func (r MockClubRepository) Add(c *model.Club) (*model.Club, error) {
 	return c, nil
 }
 
-func (r *MockClubRepository) Remove(c *model.Club) error {
+func (r MockClubRepository) Remove(c *model.Club) error {
 	return nil
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func (s service) GetPlayerById(id int) (*model.Player, error) {
-	p, err := s.playerRepository.FindOne(&model.Player{Id: id})
+	p, err := s.repository.Player.FindOne(&model.Player{Id: id})
 	if err != nil {
 		return nil, err
 	}
@@ -16,7 +16,7 @@ func (s service) GetPlayerById(id int) (*model.Player, error) {
 
 func (s service) DeletePlayer(id int) (*model.Player, error) {
 	p, err := s.GetPlayerById(id)
-	s.playerRepository.Remove(p)
+	s.repository.Player.Remove(p)
 	return p, err
 }
 
@@ -41,17 +41,15 @@ func (s service) CreatePlayer(playerDTO *CreatePlayerDTO) (*CreatePlayerDTO, err
 		return nil, err
 	}
 
-	s.playerRepository.Add(player)
+	s.repository.Player.Add(player)
 
 	playerDTO.Id = player.Id
 	return playerDTO, nil
 }
 
 func (s service) clubExists(clubId int) bool {
-	if _, err := s.chessclubRepository.GetById(clubId); err != nil {
-		return false
-	}
-	return true
+	_, err := s.repository.Club.GetById(clubId)
+	return err == nil
 }
 
 func newPlayer(dto *CreatePlayerDTO) (*model.Player, error) {

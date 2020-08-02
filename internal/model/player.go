@@ -18,10 +18,3 @@ const (
 	RankingLearner = 1
 	RankingNewbie  = 2
 )
-
-type PlayerRepository interface {
-	Add(*Player) (*Player, error)
-	FindOne(*Player) (*Player, error)
-	Remove(*Player) error
-	Count(*Player) int
-}

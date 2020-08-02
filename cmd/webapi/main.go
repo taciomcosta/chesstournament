@@ -10,7 +10,7 @@ import (
 	"github.com/taciomcosta/chesstournament/internal/shared"
 )
 
-var service shared.Service = shared.NewService(data.ClubRepository{}, data.PlayerRepository{})
+var service shared.Service = shared.NewService(data.NewRepository())
 var swaggerURLPath = "/swagger"
 var router *mux.Router = mux.NewRouter().PathPrefix("/v1").Subrouter()
 
